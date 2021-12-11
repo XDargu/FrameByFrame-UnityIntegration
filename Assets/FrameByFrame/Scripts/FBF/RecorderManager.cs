@@ -500,7 +500,6 @@ namespace FbF
 		}
 	}
 
-	// #TODO: This should be part of an interface
 	[DataContract]
 	public class EntityData
 	{
@@ -774,7 +773,7 @@ namespace FbF
 			}
 
 			// Send frame data every frame
-			FrameMessage message = new FrameMessage ();
+			FrameMessage message = new FrameMessage();
 			message.data = frameData;
 			message.type = MessageType.FrameData;
 
@@ -786,25 +785,6 @@ namespace FbF
 			foreach (TcpClient client in m_tcpClients)
 			{
 				m_server.SendData(client, data);
-			}
-
-            {
-				// Server test
-				frameData.frameId = (UInt32)Time.frameCount;
-				frameData.clientId = 1;
-				frameData.serverTime = (UInt32)Math.Round((Time.timeSinceLevelLoadAsDouble - Time.deltaTime) * 1000);
-				frameData.tag = "Client";
-				// Send frame data every frame
-				FrameMessage message2 = new FrameMessage();
-				message2.data = frameData;
-				message2.type = MessageType.FrameData;
-
-				string data2 = JsonConvert.SerializeObject(message2, settings);
-
-				foreach (TcpClient client in m_tcpClients)
-				{
-					m_server.SendData(client, data2);
-				}
 			}
 
 			// Send recording options as well. This can probably be done every couple of frames
@@ -820,103 +800,8 @@ namespace FbF
 				m_server.SendData(client, recordingOptionsData);
 			}
 
-			/*using (MemoryStream memoryStream = new MemoryStream ())
-			{
-				DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FrameMessage));
-
-				serializer.WriteObject(memoryStream, message);
-				memoryStream.Position = 0;
-
-
-				StreamReader reader = new StreamReader(memoryStream);
-				string data = reader.ReadToEnd();
-
-
-				foreach (TcpClient client in m_tcpClients)
-				{
-					m_server.SendData(client, data);
-				}
-			}*/
-
 			frameData.entities.Clear();
 			eventIdx = 0;
-
-			/*if (Input.GetKeyDown (KeyCode.G)) {
-				FrameData frameData = new FrameData();
-				frameData.frameId = (UInt32)Time.frameCount;
-				frameData.elapsedTime = Time.deltaTime;
-				frameData.entities = new List<EntityData>();
-
-				EntityData entityData = new EntityData();
-				entityData.id = 2;
-				entityData.properties = new List<PropertyData>();
-				entityData.events = new List<EventData>();
-
-				PropertyData property = new PropertyData();
-				property.name = "Test";
-				property.type = "string";
-				property.value = "hello world";
-
-				entityData.properties.Add(property);
-
-				frameData.entities.Add(entityData);
-
-				FrameMessage message = new FrameMessage ();
-				message.data = frameData;
-				message.type = MessageType.FrameData;
-
-				using (MemoryStream memoryStream = new MemoryStream ())
-				{
-					DataContractJsonSerializerSettings settings = new DataContractJsonSerializerSettings ();
-					settings.UseSimpleDictionaryFormat = true;
-
-					DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(FrameMessage), settings);
-
-					serializer.WriteObject(memoryStream, message);
-					memoryStream.Position = 0;
-
-					StreamReader reader = new StreamReader(memoryStream);
-					string data = reader.ReadToEnd();
-
-					foreach (TcpClient client in m_tcpClients)
-					{
-						m_server.SendData(client, data);
-					}
-				}
-			}
-
-			if (Input.GetKeyDown(KeyCode.A))
-			{
-				TestData testData = new TestData();
-				testData.entityId = 12;
-				testData.entityName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut l";
-				foreach (TcpClient client in m_tcpClients)
-				{
-					m_server.SendData(client, JsonUtility.ToJson(testData));
-				}
-			}
-
-			if (Input.GetKeyDown(KeyCode.Q))
-			{
-				TestData testData = new TestData();
-				testData.entityId = 12;
-				testData.entityName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut la";
-				foreach (TcpClient client in m_tcpClients)
-				{
-					m_server.SendData(client, JsonUtility.ToJson(testData));
-				}
-			}
-
-			if (Input.GetKeyDown(KeyCode.W))
-			{
-				TestData testData = new TestData();
-				testData.entityId = 12;
-				testData.entityName = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum";
-				foreach (TcpClient client in m_tcpClients)
-				{
-					m_server.SendData(client, JsonUtility.ToJson(testData));
-				}
-			}*/
 		}
 	}
 }
