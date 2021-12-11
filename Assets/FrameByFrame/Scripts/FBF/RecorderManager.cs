@@ -443,7 +443,7 @@ namespace FbF
 	public class EventData
 	{
 		[DataMember]
-		public UInt32 eventIdx;
+		public UInt32 idx;
 		[DataMember]
 		public string name;
 		[DataMember]
@@ -451,9 +451,9 @@ namespace FbF
 		[DataMember]
 		private PropertyGroup properties;
 
-		public EventData(UInt32 idx, string eventName, string eventTag = "")
+		public EventData(UInt32 index, string eventName, string eventTag = "")
         {
-			eventIdx = idx;
+			idx = index;
 			name = eventName;
 			tag = eventTag;
 			properties = new PropertyGroup("properties");
@@ -617,34 +617,38 @@ namespace FbF
 	}
 
 	[DataContract]
-	public class FrameMessage
-	{
+	public class FbFMessage
+    {
 		[DataMember]
 		public MessageType type;
+	}
 
+	[DataContract]
+	public class FrameMessage : FbFMessage
+	{
 		[DataMember]
 		public FrameData data;
 	}
 
 	[DataContract]
-	public class RecordingOptionsMessage
+	public class RecordingOptionsMessage : FbFMessage
 	{
-		[DataMember]
-		public MessageType type;
-
 		[DataMember]
 		public List<RecordingOption> data;
 	}
 
 	[DataContract]
-	public class RecordingOptionChangedMessage
+	public class RecordingOptionChangedMessage : FbFMessage
 	{
-		[DataMember]
-		public MessageType type;
-
 		[DataMember]
 		public RecordingOption data;
 	}
+
+	public enum RecordingMode
+    {
+		NetworkConnection,
+		RawData
+    }
 
 	public class RecorderNetworkWebSocket : INetworkWebSocket
 	{
@@ -654,7 +658,25 @@ namespace FbF
 
 		private UInt32 eventIdx;
 
+		private RecordingMode recordingMode;
+
+		private bool shouldCloseRawDataFile;
+		private string rawRecordingPath;
+
 		public UInt32 GetNextEventIdx() { return eventIdx++; }
+
+		public void StartRawRecording(string path)
+		{
+			recordingMode = RecordingMode.RawData;
+			rawRecordingPath = path + ".fbf";
+			FileUtil.DeleteFileOrDirectory(rawRecordingPath);
+		}
+
+		public void StopRawRecording()
+        {
+			recordingMode = RecordingMode.NetworkConnection;
+			CloseRawDataFile();
+		}
 
 		// TODO: Helper for frame data (fast entity access)
 		// private Dictionary<UInt32, EntityData> registeredEntities;
@@ -683,11 +705,6 @@ namespace FbF
 			return entityData;
 		}
 
-		private void RegisterEntity(GameObject entity)
-        {
-
-        }
-
 		public override void Init(WebSocketServer server)
 		{
 			m_server = server;
@@ -695,6 +712,11 @@ namespace FbF
 			frameData = new FrameData();
 			m_tcpClients = new List<TcpClient>();
 			eventIdx = 0;
+			recordingMode = RecordingMode.RawData;
+			shouldCloseRawDataFile = false;
+
+			// Uncomment to test raw data recording
+			// StartRawRecording(Application.persistentDataPath + "/rawRecording");
 
 			FbFManager.print("Recorder Manager Initialized");
 		}
@@ -734,18 +756,22 @@ namespace FbF
 			{
 				ReferenceLoopHandling = ReferenceLoopHandling.Error
 			};
-			dynamic result = JsonConvert.DeserializeObject(data, settings);
+			FbFMessage result = JsonConvert.DeserializeObject<FbFMessage>(data, settings);
 			MessageType type = result.type;
 
 			if (type == MessageType.RecordingOptionChanged)
             {
-				RecordingOptionChangedMessage message = JsonConvert.DeserializeObject< RecordingOptionChangedMessage>(data, settings);
+				RecordingOptionChangedMessage message = JsonConvert.DeserializeObject<RecordingOptionChangedMessage>(data, settings);
 				FbFManager.SetRecordingOption(message.data.name, message.data.enabled);
             }
 		}
 
 		public override void Shutdown()
 		{
+			if (shouldCloseRawDataFile)
+			{
+				CloseRawDataFile();
+			}
 			m_server.UnRegisterNetworkWebSocket(this);
 		}
 
@@ -757,27 +783,93 @@ namespace FbF
             }
 			if (!Application.isPlaying)
             {
+				if (shouldCloseRawDataFile)
+                {
+					CloseRawDataFile();
+                }
 				return;
             }
+
 			frameData.frameId = (UInt32)Time.frameCount;
-			frameData.clientId = 0;
-			frameData.serverTime = (UInt32)Math.Round(Time.timeSinceLevelLoadAsDouble * 1000); // Server time in ms
-			frameData.tag = "Server";
+			frameData.clientId = 0; // TODO: Needs to come from the initial config
+			frameData.serverTime = (UInt32)Math.Round(Time.timeSinceLevelLoadAsDouble * 1000); // Server time in ms, in a real networked application, it needs to come from the networking system
+			frameData.tag = "Server"; // TODO: Needs to come from the initial config
 			frameData.elapsedTime = Time.deltaTime;
 
 			// Add special properties
 			foreach (EntityData entity in frameData.entities)
 			{
+				// Properties need to be in this order
 				entity.AddSpecialProperty("name", entity.gameObject.name);
 				entity.AddSpecialProperty("position", entity.gameObject.transform.position);
 			}
 
 			// Send frame data every frame
+			switch (recordingMode)
+            {
+				case RecordingMode.NetworkConnection:
+					SendFrameDataToClients();
+					break;
+				case RecordingMode.RawData:
+					LogFrameDataToFile();
+					break;
+            }
+
+			frameData.entities.Clear();
+			eventIdx = 0;
+		}
+
+		private void CloseRawDataFile()
+        {
+			string path = rawRecordingPath + ".temp";
+			string pathFinalFile = rawRecordingPath;
+			StreamWriter writer = new StreamWriter(path, true);
+			writer.WriteLine("]}");
+			writer.Close();
+
+			// Remove .temp extension
+			File.Move(path, pathFinalFile);
+			shouldCloseRawDataFile = false;
+		}
+
+		private void LogFrameDataToFile()
+        {
+			JsonSerializerSettings settings = new JsonSerializerSettings
+			{
+				ReferenceLoopHandling = ReferenceLoopHandling.Error
+			};
+			string data = JsonConvert.SerializeObject(frameData, settings);
+
+			string path = rawRecordingPath + ".temp";
+
+			bool doesFileExist = System.IO.File.Exists(path);
+
+			StreamWriter writer = new StreamWriter(path, true);
+			if (!doesFileExist)
+            {
+				writer.WriteLine("{");
+				writer.WriteLine("\"type\": 1,");
+				writer.WriteLine("\"version\": 1,");
+				writer.WriteLine("\"rawFrames\": [");
+				writer.WriteLine(data);
+			}
+			else
+            {
+				writer.WriteLine(",");
+				writer.WriteLine(data);
+			}
+			writer.Close();
+			shouldCloseRawDataFile = true;
+		}
+
+		private void SendFrameDataToClients()
+        {
 			FrameMessage message = new FrameMessage();
 			message.data = frameData;
 			message.type = MessageType.FrameData;
 
-			JsonSerializerSettings settings = new JsonSerializerSettings{
+			JsonSerializerSettings settings = new JsonSerializerSettings
+			{
 				ReferenceLoopHandling = ReferenceLoopHandling.Error
 			};
 			string data = JsonConvert.SerializeObject(message, settings);
@@ -799,9 +891,6 @@ namespace FbF
 			{
 				m_server.SendData(client, recordingOptionsData);
 			}
-
-			frameData.entities.Clear();
-			eventIdx = 0;
 		}
 	}
 }
