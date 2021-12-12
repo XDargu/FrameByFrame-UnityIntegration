@@ -712,11 +712,11 @@ namespace FbF
 			frameData = new FrameData();
 			m_tcpClients = new List<TcpClient>();
 			eventIdx = 0;
-			recordingMode = RecordingMode.RawData;
+			recordingMode = RecordingMode.NetworkConnection;
 			shouldCloseRawDataFile = false;
 
 			// Uncomment to test raw data recording
-			// StartRawRecording(Application.persistentDataPath + "/rawRecording");
+			StartRawRecording(Application.persistentDataPath + "/rawRecording");
 
 			FbFManager.print("Recorder Manager Initialized");
 		}
@@ -821,6 +821,8 @@ namespace FbF
 
 		private void CloseRawDataFile()
         {
+			shouldCloseRawDataFile = false;
+
 			string path = rawRecordingPath + ".temp";
 			string pathFinalFile = rawRecordingPath;
 			StreamWriter writer = new StreamWriter(path, true);
@@ -829,7 +831,6 @@ namespace FbF
 
 			// Remove .temp extension
 			File.Move(path, pathFinalFile);
-			shouldCloseRawDataFile = false;
 		}
 
 		private void LogFrameDataToFile()
