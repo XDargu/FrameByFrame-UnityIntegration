@@ -593,6 +593,8 @@ namespace FbF
 		public float elapsedTime;
 		[DataMember]
 		public List<EntityData> entities;
+		[DataMember]
+		public CoordinateSystem coordSystem = CoordinateSystem.LeftHand;
 
 		public FrameData()
 		{
@@ -648,6 +650,12 @@ namespace FbF
     {
 		NetworkConnection,
 		RawData
+    }
+
+	public enum CoordinateSystem
+    {
+		RightHand = 0,
+		LeftHand
     }
 
 	public class RecorderNetworkWebSocket : INetworkWebSocket
