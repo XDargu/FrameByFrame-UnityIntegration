@@ -76,15 +76,23 @@ namespace FbF
 			{
 				for (int i = m_tcpClients.Count - 1; i >= 0; i--)
 				{
-					if (m_tcpClients[i].GetStream().DataAvailable)
+					if (m_tcpClients[i].Connected)
 					{
-						if (!Read(m_tcpClients[i].GetStream ()))
+						if (m_tcpClients[i].GetStream().DataAvailable)
 						{
-							Write(m_tcpClients[i], (byte)WebSocketOpCode.ConnectionCloseFrame, new byte[0], true);
+							if (!Read(m_tcpClients[i].GetStream()))
+							{
+								Write(m_tcpClients[i], (byte)WebSocketOpCode.ConnectionCloseFrame, new byte[0], true);
 
-							ClientDisconnected(m_tcpClients[i]);
-							m_tcpClients.RemoveAt(i);
+								ClientDisconnected(m_tcpClients[i]);
+								m_tcpClients.RemoveAt(i);
+							}
 						}
+					}
+					else
+                    {
+						ClientDisconnected(m_tcpClients[i]);
+						m_tcpClients.RemoveAt(i);
 					}
 				}
 
@@ -116,7 +124,7 @@ namespace FbF
 			+ "Connection: Upgrade" + Environment.NewLine
 			+ "Upgrade: websocket" + Environment.NewLine
 			+ "Sec-WebSocket-Accept: " + ComputeWebSocketHandshakeSecurityHash09(socketKey) + Environment.NewLine
-			+ "Sec-WebSocket-Protocol: tcp"
+			+ "Sec-WebSocket-Protocol: " + Config.protocol
 			+ Environment.NewLine
 			+ Environment.NewLine;
 
@@ -234,9 +242,12 @@ namespace FbF
 
 		public void SendData(TcpClient tcpClient, string data)
 		{
-			byte[] payload = Encoding.UTF8.GetBytes(data);
+			if (tcpClient.Connected)
+			{
+				byte[] payload = Encoding.UTF8.GetBytes(data);
 
-			Write(tcpClient, (byte)WebSocketOpCode.TextFrame, payload, true);
+				Write(tcpClient, (byte)WebSocketOpCode.TextFrame, payload, true);
+			}
 		}
 
 		public void Write(TcpClient tcpClient, byte opCode, byte[] payload, bool isLastFrame)

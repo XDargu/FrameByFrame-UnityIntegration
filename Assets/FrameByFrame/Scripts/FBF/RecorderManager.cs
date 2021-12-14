@@ -724,7 +724,7 @@ namespace FbF
 			shouldCloseRawDataFile = false;
 
 			// Uncomment to test raw data recording
-			StartRawRecording(Application.persistentDataPath + "/rawRecording");
+			// StartRawRecording(Application.persistentDataPath + "/rawRecording");
 
 			FbFManager.print("Recorder Manager Initialized");
 		}

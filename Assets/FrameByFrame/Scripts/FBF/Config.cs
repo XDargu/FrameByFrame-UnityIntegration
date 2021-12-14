@@ -14,7 +14,7 @@ namespace FbF
 		public static int pingEachInterval = 10;
 		public static int packageTimeOut = 2000;
 		public static int clientTimeOut = 15000;
-		public static string protocolVersion = "FbF_1";
+		public static string protocol = "frameByframe";
 		public static int ExecutionTimeout = 10000;
     }
 }
