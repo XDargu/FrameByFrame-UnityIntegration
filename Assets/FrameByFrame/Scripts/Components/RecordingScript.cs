@@ -114,6 +114,7 @@ public class RecordingScript : MonoBehaviour
 				foreach (ContactPoint contact in collision.contacts)
 				{
 					eventData.AddSphere("Contact", contact.point, 0.1f, Color.blue, "Collisions");
+					eventData.AddEntityRef("Contact Entity", contact.otherCollider.gameObject);
 				}
 			}
 		}

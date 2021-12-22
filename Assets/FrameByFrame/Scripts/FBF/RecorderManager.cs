@@ -91,6 +91,39 @@ namespace FbF
 	}
 
 	[DataContract]
+	public class EntityRef
+	{
+		[DataMember]
+		public UInt32 id;
+		[DataMember]
+		public string name { get; set; }
+
+		public EntityRef(GameObject entity)
+		{
+			this.id = (UInt32)entity.GetInstanceID();
+			this.name = entity.name;
+		}
+	}
+
+	[DataContract]
+	public class PropertyEntity : IPropertyData
+	{
+		[DataMember]
+		public string type { get; set; }
+		[DataMember]
+		public string name { get; set; }
+		[DataMember]
+		public EntityRef value;
+
+		public PropertyEntity(string name, GameObject entity)
+		{
+			type = "eref";
+			this.value = new EntityRef(entity);
+			this.name = name;
+		}
+	}
+
+	[DataContract]
 	public class PropertySphere : IPropertyData
 	{
 		[DataMember]
@@ -389,6 +422,13 @@ namespace FbF
 			return comment;
 		}
 
+		public PropertyEntity AddEntityRef(string name, GameObject entity)
+		{
+			PropertyEntity entityRef = new PropertyEntity(name, entity);
+			this.value.Add(entityRef);
+			return entityRef;
+		}
+
 		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer)
 		{
 			PropertySphere sphere = new PropertySphere(name, position, radius, color, layer);
@@ -474,6 +514,11 @@ namespace FbF
 			return properties.AddComment(text);
 		}
 
+		public PropertyEntity AddEntityRef(string name, GameObject entity)
+		{
+			return properties.AddEntityRef(name, entity);
+		}
+
 		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer)
 		{
 			return properties.AddSphere(name, position, radius, color, layer);
@@ -545,6 +590,11 @@ namespace FbF
 		public PropertyComment AddComment(string text)
 		{
 			return properties[0].AddComment(text);
+		}
+
+		public PropertyEntity AddEntityRef(string name, GameObject entity)
+		{
+			return properties[0].AddEntityRef(name, entity);
 		}
 
 		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer)
