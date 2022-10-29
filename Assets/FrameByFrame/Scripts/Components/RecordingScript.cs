@@ -9,6 +9,8 @@ public class RecordingScript : MonoBehaviour
 	public bool RecordCollider;
 	public bool RecordVelocity;
 
+	public bool UseFixedUpdate = false;
+
 	public bool RecordAllChildren;
 
 	[Range(0.0f, 1.0f)]
@@ -53,11 +55,25 @@ public class RecordingScript : MonoBehaviour
 				}
 			}
 		}
-
-		Debug.Log("Init Recording Script: " + gameObject.name);
 	}
 
-	void Update()
+    private void Update()
+    {
+        if (!UseFixedUpdate)
+        {
+			Record();
+        }
+    }
+
+	private void FixedUpdate()
+	{
+		if (UseFixedUpdate)
+		{
+			Record();
+		}
+	}
+
+	void Record()
 	{
 		if (FbFManager.IsRecordingOptionEnabled("Colliders"))
 		{
@@ -77,7 +93,8 @@ public class RecordingScript : MonoBehaviour
 				size.y *= boxCollider.size.y;
 				size.z *= boxCollider.size.z;
 				PropertyGroup group = entity.AddPropertyGroup("Colliders");
-				group.AddOOBB("BoxCollider", gameObject.transform.TransformPoint(boxCollider.center), size, gameObject.transform.up, gameObject.transform.forward, new Color(1, 0.5f, 0.5f, opacity), "Colliders");
+
+				group.AddOOBB("BoxCollider", boxCollider.bounds.center, size, gameObject.transform.up, gameObject.transform.forward, new Color(1, 0.5f, 0.5f, opacity), "Colliders");
 			}
 
 			if (RecordCollider && capsuleCollider)
@@ -85,7 +102,15 @@ public class RecordingScript : MonoBehaviour
 				Vector3 size = gameObject.transform.lossyScale;
 				// TODO: Direction and correct size
 				PropertyGroup group = entity.AddPropertyGroup("Colliders");
-				group.AddCapsule("CapsuleCollider", gameObject.transform.TransformPoint(capsuleCollider.center), gameObject.transform.up, capsuleCollider.radius, capsuleCollider.height, new Color(1, 0.5f, 0.5f, opacity), "Colliders");
+				Vector3 capsuleRef = gameObject.transform.up;
+				if (capsuleCollider.direction == 0)
+					capsuleRef = gameObject.transform.right;
+				if (capsuleCollider.direction == 1)
+					capsuleRef = gameObject.transform.up;
+				if (capsuleCollider.direction == 2)
+					capsuleRef = gameObject.transform.forward;
+				
+				group.AddCapsule("CapsuleCollider", capsuleCollider.bounds.center, capsuleRef, capsuleCollider.radius, capsuleCollider.height, new Color(1, 0.5f, 0.5f, opacity), "Colliders");
 			}
 		}
 
@@ -98,6 +123,11 @@ public class RecordingScript : MonoBehaviour
 				PropertyGroup group = entity.AddPropertyGroup("RigidBody");
 				group.AddLine("Velocity", gameObject.transform.position, gameObject.transform.position + rigidBody.velocity, Color.blue, "Physics");
 			}
+		}
+
+		if (RecordAllChildren)
+        {
+			FbFManager.RecordEntity(this.gameObject);
 		}
 	}
 

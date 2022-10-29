@@ -100,7 +100,8 @@ namespace FbF
 
 		public EntityRef(GameObject entity)
 		{
-			this.id = (UInt32)entity.GetInstanceID();
+			// TODO: Massive hack to avoid dealing with negative ids. Should fix this in the future.
+			this.id = (UInt32)Math.Abs(entity.GetInstanceID());
 			this.name = entity.name;
 		}
 	}
@@ -348,6 +349,66 @@ namespace FbF
 	}
 
 	[DataContract]
+	public class PropertyPath : IPropertyData
+	{
+		[DataMember]
+		public string type { get; set; }
+		[DataMember]
+		public string name { get; set; }
+
+		[DataMember]
+		public Vector3Json[] points;
+		[DataMember]
+		public string layer;
+		[DataMember]
+		public ColorJson color;
+
+		public PropertyPath(string name, Vector3[] points, Color color, string layer)
+		{
+			this.type = "path";
+			this.name = name;
+			this.points = new Vector3Json[points.Length];
+			for (int i = 0; i < points.Length; i++)
+			{
+				this.points[i] = new Vector3Json(points[i]);
+			}
+			this.layer = layer;
+			this.color = new ColorJson(color);
+		}
+	}
+
+	[DataContract]
+	public class PropertyTriangle : IPropertyData
+	{
+		[DataMember]
+		public string type { get; set; }
+		[DataMember]
+		public string name { get; set; }
+
+		[DataMember]
+		public Vector3Json p1;
+		[DataMember]
+		public Vector3Json p2;
+		[DataMember]
+		public Vector3Json p3;
+		[DataMember]
+		public string layer;
+		[DataMember]
+		public ColorJson color;
+
+		public PropertyTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer)
+		{
+			this.type = "triangle";
+			this.name = name;
+			this.p1 = new Vector3Json(p1);
+			this.p2 = new Vector3Json(p2);
+			this.p3 = new Vector3Json(p3);
+			this.layer = layer;
+			this.color = new ColorJson(color);
+		}
+	}
+
+	[DataContract]
 	[KnownType(typeof(PropertyData<string>))]
 	[KnownType(typeof(PropertyData<float>))]
 	[KnownType(typeof(PropertyData<Vector3Json>))]
@@ -477,6 +538,20 @@ namespace FbF
 			this.value.Add(mesh);
 			return mesh;
 		}
+
+		public PropertyPath AddPath(string name, Vector3[] points, Color color, string layer)
+		{
+			PropertyPath path = new PropertyPath(name, points, color, layer);
+			this.value.Add(path);
+			return path;
+		}
+
+		public PropertyTriangle AddTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer)
+		{
+			PropertyTriangle triangle = new PropertyTriangle(name, p1, p2, p3, color, layer);
+			this.value.Add(triangle);
+			return triangle;
+		}
 	}
 
 	[DataContract]
@@ -542,6 +617,21 @@ namespace FbF
 		public PropertyLine AddLine(string name, Vector3 origin, Vector3 destination, Color color, string layer)
 		{
 			return properties.AddLine(name, origin, destination, color, layer);
+		}
+
+		public PropertyMesh AddMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer)
+        {
+			return properties.AddMesh(name, vertices, indices, wireframe, color, layer);
+		}
+
+		public PropertyPath AddPath(string name, Vector3[] points, Color color, string layer)
+        {
+			return properties.AddPath(name, points, color, layer);
+        }
+
+		public PropertyTriangle AddTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer)
+        {
+			return properties.AddTriangle(name, p1, p2, p3, color, layer);
 		}
 	}
 
@@ -620,6 +710,21 @@ namespace FbF
 		public PropertyLine AddLine(string name, Vector3 origin, Vector3 destination, Color color, string layer)
 		{
 			return properties[0].AddLine(name, origin, destination, color, layer);
+		}
+
+		public PropertyMesh AddMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer)
+		{
+			return properties[0].AddMesh(name, vertices, indices, wireframe, color, layer);
+		}
+
+		public PropertyPath AddPath(string name, Vector3[] points, Color color, string layer)
+		{
+			return properties[0].AddPath(name, points, color, layer);
+		}
+
+		public PropertyTriangle AddTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer)
+		{
+			return properties[0].AddTriangle(name, p1, p2, p3, color, layer);
 		}
 
 		public void AddSpecialProperty<T>(string name, T value)
@@ -723,6 +828,8 @@ namespace FbF
 
 		public UInt32 GetNextEventIdx() { return eventIdx++; }
 
+		public RecordingMode GetRecordingMode() { return recordingMode; }
+
 		public void StartRawRecording(string path)
 		{
 			recordingMode = RecordingMode.RawData;
@@ -741,7 +848,8 @@ namespace FbF
 
 		public EntityData RecordEntity(GameObject entity)
 		{
-			UInt32 entityId = (UInt32)entity.GetInstanceID();
+			// TODO: Massive hack to avoid dealing with negative ids. Should fix this in the future.
+			UInt32 entityId = (UInt32)Math.Abs(entity.GetInstanceID());
 			foreach (EntityData storedEntity in frameData.entities)
 			{
 				if (storedEntity.id == entityId)
@@ -756,7 +864,8 @@ namespace FbF
 			frameData.entities.Add(entityData);
 			if (entity.transform.parent)
             {
-				entityData.parentId = (UInt32)entity.transform.parent.gameObject.GetInstanceID();
+				// TODO: Massive hack to avoid dealing with negative ids. Should fix this in the future.
+				entityData.parentId = (UInt32)Math.Abs(entity.transform.parent.gameObject.GetInstanceID());
 				RecordEntity(entity.transform.parent.gameObject);
             }
 

@@ -97,6 +97,11 @@ namespace FbF
 			}
 		}
 
+		public static Dictionary<string, bool> GetRecordingOptions()
+        {
+			return m_recordingOptions;
+        }
+
 		public static WebSocketServer server;
 
 		public static void print(string text)

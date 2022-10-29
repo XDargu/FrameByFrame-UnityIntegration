@@ -7,6 +7,7 @@ namespace FbF
 	public static class Config
 	{
 		public static string version = "0.0.0";
+		public static string rawRecordingDefaultPath = "rawRecording";
 		public static int port = 23001;
 		public static int portQuery = 23000;
 		public static int readInterval = 100;
