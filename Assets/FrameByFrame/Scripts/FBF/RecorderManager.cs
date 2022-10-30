@@ -100,8 +100,7 @@ namespace FbF
 
 		public EntityRef(GameObject entity)
 		{
-			// TODO: Massive hack to avoid dealing with negative ids. Should fix this in the future.
-			this.id = (UInt32)Math.Abs(entity.GetInstanceID());
+			this.id = RecorderNetworkWebSocket.GetEntityID(entity);
 			this.name = entity.name;
 		}
 	}
@@ -658,7 +657,8 @@ namespace FbF
 		private List<EventData> events;
 
 		// Custom implementation
-		public GameObject gameObject;
+		public string name;
+		public Vector3 position;
 
 		public EventData AddEvent(string name, string tag)
         {
@@ -826,6 +826,14 @@ namespace FbF
 		private bool shouldCloseRawDataFile;
 		private string rawRecordingPath;
 
+		public static UInt32 GetEntityID(GameObject entity)
+        {
+			if (entity.GetInstanceID() > 0)
+				return ((UInt32)entity.GetInstanceID()) + Int32.MaxValue;
+			else
+				return (UInt32)(entity.GetInstanceID() + Int32.MaxValue);
+		}
+
 		public UInt32 GetNextEventIdx() { return eventIdx++; }
 
 		public RecordingMode GetRecordingMode() { return recordingMode; }
@@ -848,8 +856,7 @@ namespace FbF
 
 		public EntityData RecordEntity(GameObject entity)
 		{
-			// TODO: Massive hack to avoid dealing with negative ids. Should fix this in the future.
-			UInt32 entityId = (UInt32)Math.Abs(entity.GetInstanceID());
+			UInt32 entityId = GetEntityID(entity);
 			foreach (EntityData storedEntity in frameData.entities)
 			{
 				if (storedEntity.id == entityId)
@@ -860,12 +867,13 @@ namespace FbF
 
 			// Add a new one
 			EntityData entityData = new EntityData(entityId);
-			entityData.gameObject = entity;
+			entityData.position = entity.transform.position;
+			entityData.name = entity.name;
+
 			frameData.entities.Add(entityData);
 			if (entity.transform.parent)
             {
-				// TODO: Massive hack to avoid dealing with negative ids. Should fix this in the future.
-				entityData.parentId = (UInt32)Math.Abs(entity.transform.parent.gameObject.GetInstanceID());
+				entityData.parentId = GetEntityID(entity.transform.parent.gameObject);
 				RecordEntity(entity.transform.parent.gameObject);
             }
 
@@ -967,8 +975,8 @@ namespace FbF
 			foreach (EntityData entity in frameData.entities)
 			{
 				// Properties need to be in this order
-				entity.AddSpecialProperty("name", entity.gameObject.name);
-				entity.AddSpecialProperty("position", entity.gameObject.transform.position);
+				entity.AddSpecialProperty("name", entity.name);
+				entity.AddSpecialProperty("position", entity.position);
 			}
 
 			// Send frame data every frame
