@@ -7,8 +7,6 @@ public class FrameByFrameWindow : EditorWindow
 {
     bool isAdvancedConfigEnabled = false;
     bool areRecordingOptionsEnabled = true;
-    bool myBool = true;
-    float myFloat = 1.23f;
 
     // Add menu item named "My Window" to the Window menu
     [MenuItem("Window/Frame by Frame")]

@@ -13,6 +13,7 @@ public class AIRecordingScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        FbFManager.RegisterRecordingOption("Navigation");
         agent = GetComponent<NavMeshAgent>();
     }
 
@@ -26,6 +27,7 @@ public class AIRecordingScript : MonoBehaviour
                 EntityData entity = FbFManager.RecordEntity(this.gameObject);
                 PropertyGroup group = entity.AddPropertyGroup("Navigation");
                 NavMeshPath path = agent.path;
+                group.AddPath("Path", path.corners, Color.red, "Pathfinding");
 
                 for (int i = 0; i < path.corners.Length; ++i)
                 {
