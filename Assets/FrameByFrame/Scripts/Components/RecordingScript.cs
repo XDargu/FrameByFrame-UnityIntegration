@@ -11,7 +11,11 @@ public class RecordingScript : MonoBehaviour
 
 	public bool UseFixedUpdate = false;
 
-	public bool RecordAllChildren;
+	public bool RecordAllChildren = false;
+	public bool MergeChildrenRecordings = false;
+
+	bool isOriginalObject = true;
+	GameObject targetObject;
 
 	[Range(0.0f, 1.0f)]
 	public float opacity = 1.0f;
@@ -38,6 +42,11 @@ public class RecordingScript : MonoBehaviour
 		capsuleCollider = gameObject.GetComponent<CapsuleCollider>();
 		rigidBody = gameObject.GetComponent<Rigidbody>();
 
+		if (isOriginalObject)
+        {
+			targetObject = gameObject;
+        }
+
 		if (RecordAllChildren)
 		{
 			int childCount = gameObject.transform.childCount;
@@ -52,6 +61,9 @@ public class RecordingScript : MonoBehaviour
 					recordingScript.RecordVelocity = RecordVelocity;
 					recordingScript.opacity = opacity;
 					recordingScript.RecordAllChildren = RecordAllChildren;
+					recordingScript.MergeChildrenRecordings = MergeChildrenRecordings;
+					recordingScript.targetObject = MergeChildrenRecordings ? targetObject : recordingScript.gameObject;
+					recordingScript.isOriginalObject = false;
 				}
 			}
 		}
@@ -77,7 +89,7 @@ public class RecordingScript : MonoBehaviour
 	{
 		if (FbFManager.IsRecordingOptionEnabled("Colliders"))
 		{
-			EntityData entity = FbFManager.RecordEntity(this.gameObject);
+			EntityData entity = FbFManager.RecordEntity(targetObject);
 
 			if (RecordCollider && sphereCollider)
 			{
@@ -116,7 +128,7 @@ public class RecordingScript : MonoBehaviour
 
 		if (FbFManager.IsRecordingOptionEnabled("Physics"))
 		{
-			EntityData entity = FbFManager.RecordEntity(this.gameObject);
+			EntityData entity = FbFManager.RecordEntity(targetObject);
 
 			if (RecordVelocity && rigidBody)
 			{
@@ -127,7 +139,7 @@ public class RecordingScript : MonoBehaviour
 
 		if (RecordAllChildren)
         {
-			FbFManager.RecordEntity(this.gameObject);
+			FbFManager.RecordEntity(targetObject);
 		}
 	}
 
@@ -137,7 +149,7 @@ public class RecordingScript : MonoBehaviour
 		{
 			if (RecordCollider)
 			{
-				EntityData entity = FbFManager.RecordEntity(this.gameObject);
+				EntityData entity = FbFManager.RecordEntity(targetObject);
 				EventData eventData = entity.AddEvent("OnCollisionEnter", "Collision");
 				eventData.AddProperty("Collider name", collision.collider.name);
 
