@@ -659,6 +659,8 @@ namespace FbF
 		// Custom implementation
 		public string name;
 		public Vector3 position;
+		public Vector3 up;
+		public Vector3 forward;
 
 		public EventData AddEvent(string name, string tag)
         {
@@ -868,6 +870,8 @@ namespace FbF
 			// Add a new one
 			EntityData entityData = new EntityData(entityId);
 			entityData.position = entity.transform.position;
+			entityData.up = entity.transform.up;
+			entityData.forward = entity.transform.forward;
 			entityData.name = entity.name;
 
 			frameData.entities.Add(entityData);
@@ -977,6 +981,8 @@ namespace FbF
 				// Properties need to be in this order
 				entity.AddSpecialProperty("name", entity.name);
 				entity.AddSpecialProperty("position", entity.position);
+				entity.AddSpecialProperty("up", entity.up);
+				entity.AddSpecialProperty("forward", entity.forward);
 			}
 
 			// Send frame data every frame
