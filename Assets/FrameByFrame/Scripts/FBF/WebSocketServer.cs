@@ -170,7 +170,7 @@ namespace FbF
 			byte byte2 = (byte)stream.ReadByte();
 			byte maskFlag = 0x80;
 			bool isMaskBitSet = (byte2 & maskFlag) == maskFlag;
-			uint len = ReadLength(byte2, stream);
+			UInt64 len = ReadLength(byte2, stream);
 			byte[] payload;
 
 			if (isMaskBitSet)
@@ -181,7 +181,7 @@ namespace FbF
 				payload = new byte[len];
 				stream.Read(payload, 0, (int)len);
 
-				for (int i = 0; i < len; i++)
+				for (UInt64 i = 0; i < len; i++)
 				{
 					payload[i] = (Byte)(payload[i] ^ maskKey[i % 4]);
 				}
@@ -200,21 +200,34 @@ namespace FbF
 			return true;
 		}
 
-		public static uint ReadLength(byte byte2, Stream stream)
+		public static UInt64 ReadLength(byte byte2, Stream stream)
 		{
 			byte lenFlag = 0x7F;
 			int lenght = byte2 & lenFlag;
 
 			if (lenght <= 125)
 			{
-				return (uint)lenght;
+				return (UInt64)lenght;
+			}
+			else if (lenght == 126)
+            {
+				byte[] bSize = new byte[2];
+				stream.Read(bSize, 0, 2);
+
+				if (BitConverter.IsLittleEndian)
+					Array.Reverse(bSize);
+
+				return (UInt64)BitConverter.ToUInt16(bSize, 0);
 			}
 			else
 			{
-				byte[] bSize = new byte[2];
-				stream.Read(bSize, 0, 2);
-				return (uint)BitConverter.ToUInt16(bSize, 0);
+				byte[] bSize = new byte[8];
+				stream.Read(bSize, 0, 8);
 
+				if (BitConverter.IsLittleEndian)
+					Array.Reverse(bSize);
+
+				return (UInt64)BitConverter.ToUInt64(bSize, 0);
 			}
 		}
 
