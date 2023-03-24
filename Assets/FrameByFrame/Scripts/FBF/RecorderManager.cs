@@ -8,6 +8,7 @@ using System.Runtime.Serialization.Json;
 using Newtonsoft.Json;
 using UnityEngine;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 namespace FbF
 {
@@ -747,6 +748,8 @@ namespace FbF
 		[DataMember]
 		public string tag;
 		[DataMember]
+		public string scene;
+		[DataMember]
 		public float elapsedTime;
 		[DataMember]
 		public List<EntityData> entities;
@@ -772,7 +775,10 @@ namespace FbF
 	{
 		FrameData = 0,
 		RecordingOptions,
-		RecordingOptionChanged
+		RecordingOptionChanged,
+		SyncOptionsChanged,
+		SyncVisibleShapesData,
+		SyncCameraData
 	}
 
 	[DataContract]
@@ -803,6 +809,45 @@ namespace FbF
 		public RecordingOption data;
 	}
 
+	[DataContract]
+	public class SyncCameraDataMessage : FbFMessage
+	{
+		[DataMember]
+		public Vector3 position;
+
+		[DataMember]
+		public Vector3 up;
+
+		[DataMember]
+		public Vector3 forward;
+	}
+
+	[DataContract]
+	public class RemoteEntityData
+	{
+		[DataMember]
+		public UInt32 id;
+
+		[DataMember]
+		public string name;
+
+		[DataMember]
+		public Vector3 position;
+
+		[DataMember]
+		public IPropertyData[] shapes;
+	}
+
+	[DataContract]
+	public class SyncVisibleShapesDataMessage : FbFMessage
+	{
+		[DataMember]
+		public RemoteEntityData[] entities;
+
+		[DataMember]
+		public CoordinateSystem coordSystem;
+	}
+
 	public enum RecordingMode
     {
 		NetworkConnection,
@@ -827,6 +872,8 @@ namespace FbF
 
 		private bool shouldCloseRawDataFile;
 		private string rawRecordingPath;
+
+		private SyncCameraDataMessage lastCameraMessage = null;
 
 		public static UInt32 GetEntityID(GameObject entity)
         {
@@ -943,6 +990,16 @@ namespace FbF
 				RecordingOptionChangedMessage message = JsonConvert.DeserializeObject<RecordingOptionChangedMessage>(data, settings);
 				FbFManager.SetRecordingOption(message.data.name, message.data.enabled);
             }
+			if (type == MessageType.SyncCameraData)
+			{
+				SyncCameraDataMessage message = JsonConvert.DeserializeObject<SyncCameraDataMessage>(data, settings);
+				lastCameraMessage = message;
+			}
+			if (type == MessageType.SyncVisibleShapesData)
+            {
+				SyncVisibleShapesDataMessage message = JsonConvert.DeserializeObject<SyncVisibleShapesDataMessage>(data, settings);
+				Debug.Log(message);
+			}
 		}
 
 		public override void Shutdown()
@@ -956,6 +1013,17 @@ namespace FbF
 
 		public override void Update()
 		{
+			if (lastCameraMessage != null)
+			{
+				SceneView sceneCam = SceneView.lastActiveSceneView;
+				sceneCam.camera.transform.position = lastCameraMessage.position;
+				sceneCam.pivot = lastCameraMessage.position;
+				sceneCam.LookAt(lastCameraMessage.position + lastCameraMessage.forward, Quaternion.LookRotation(lastCameraMessage.forward, lastCameraMessage.up));
+				sceneCam.Repaint();
+
+				lastCameraMessage = null;
+			}
+
 			if (EditorApplication.isPaused)
             {
 				return;
@@ -970,6 +1038,7 @@ namespace FbF
             }
 
 			frameData.frameId = (UInt32)Time.frameCount;
+			frameData.scene = SceneManager.GetActiveScene().path;
 			frameData.clientId = 0; // TODO: Needs to come from the initial config
 			frameData.serverTime = (UInt32)Math.Round(Time.timeSinceLevelLoadAsDouble * 1000); // Server time in ms, in a real networked application, it needs to come from the networking system
 			frameData.tag = "Server"; // TODO: Needs to come from the initial config
