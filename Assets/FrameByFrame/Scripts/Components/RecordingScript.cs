@@ -91,10 +91,6 @@ public class RecordingScript : MonoBehaviour
 		{
 			EntityData entity = FbFManager.RecordEntity(targetObject);
 
-			{
-				PropertyGroup group = entity.AddPropertyGroup("Colliders");
-				group.AddProperty("testVec2", new Vector2(transform.position.x, transform.position.y));
-			}
 			if (RecordCollider && sphereCollider)
 			{
 				PropertyGroup group = entity.AddPropertyGroup("Colliders");
