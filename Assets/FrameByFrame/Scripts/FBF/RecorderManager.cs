@@ -13,6 +13,21 @@ using UnityEngine.SceneManagement;
 namespace FbF
 {
 	[DataContract]
+	public class Vector2Json
+	{
+		[DataMember]
+		float x;
+		[DataMember]
+		float y;
+
+		public Vector2Json(Vector2 value)
+		{
+			x = value.x;
+			y = value.y;
+		}
+	}
+
+	[DataContract]
 	public class Vector3Json
 	{
 		[DataMember]
@@ -450,6 +465,10 @@ namespace FbF
 			else if (typeof(T) == typeof(float))
 			{
 				this.value.Add (new PropertyData<float> ("number", name, (float)(object)value));
+			}
+			else if (typeof(T) == typeof(Vector2))
+			{
+				this.value.Add(new PropertyData<Vector2Json>("vec2", name, new Vector2Json((Vector2)(object)value)));
 			}
 			else if (typeof(T) == typeof(Vector3))
 			{
