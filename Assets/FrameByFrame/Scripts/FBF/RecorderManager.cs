@@ -71,6 +71,14 @@ namespace FbF
 		string name { get; set; }
 	}
 
+	[Flags]
+	public enum PropertyFlags
+	{
+		None = 0,
+		Hidden = 1 << 0,
+		Collapsed = 1 << 1
+	}
+
 	[DataContract]
 	public class PropertyData<T> : IPropertyData
 	{
@@ -79,6 +87,8 @@ namespace FbF
 		[DataMember]
 		public string name { get; set; }
 		[DataMember]
+		public PropertyFlags flags { get; set; }
+		[DataMember]
 		public T value;
 
 		public PropertyData(string propType, string propName, T propValue)
@@ -86,6 +96,7 @@ namespace FbF
 			type = propType;
 			name = propName;
 			value = propValue;
+			flags = PropertyFlags.None;
 		}
 	}
 
@@ -128,6 +139,7 @@ namespace FbF
 		public string type { get; set; }
 		[DataMember]
 		public string name { get; set; }
+
 		[DataMember]
 		public EntityRef value;
 
@@ -146,6 +158,8 @@ namespace FbF
 		public string type { get; set; }
 		[DataMember]
 		public string name { get; set; }
+		[DataMember]
+		public PropertyFlags flags { get; set; }
 
 		[DataMember]
 		public Vector3Json position;
@@ -156,7 +170,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertySphere(string name, Vector3 position, float radius, Color color, string layer)
+		public PropertySphere(string name, Vector3 position, float radius, Color color, string layer, PropertyFlags flags)
 		{
 			this.type = "sphere";
 			this.name = name;
@@ -164,6 +178,7 @@ namespace FbF
 			this.radius = radius;
 			this.color = new ColorJson(color);
 			this.layer = layer;
+			this.flags = flags;
 		}
 	}
 
@@ -174,6 +189,8 @@ namespace FbF
 		public string type { get; set; }
 		[DataMember]
 		public string name { get; set; }
+		[DataMember]
+		public PropertyFlags flags { get; set; }
 
 		[DataMember]
 		public Vector3Json position;
@@ -184,7 +201,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyAABB(string name, Vector3 position, Vector3 size, Color color, string layer)
+		public PropertyAABB(string name, Vector3 position, Vector3 size, Color color, string layer, PropertyFlags flags)
 		{
 			this.type = "aabb";
 			this.name = name;
@@ -192,6 +209,7 @@ namespace FbF
 			this.size = new Vector3Json(size);
 			this.color = new ColorJson(color);
 			this.layer = layer;
+			this.flags = flags;
 		}
 	}
 
@@ -202,6 +220,8 @@ namespace FbF
 		public string type { get; set; }
 		[DataMember]
 		public string name { get; set; }
+		[DataMember]
+		public PropertyFlags flags { get; set; }
 
 		[DataMember]
 		public Vector3Json position;
@@ -218,7 +238,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyOOBB(string name, Vector3 position, Vector3 size, Vector3 up, Vector3 forward, Color color, string layer)
+		public PropertyOOBB(string name, Vector3 position, Vector3 size, Vector3 up, Vector3 forward, Color color, string layer, PropertyFlags flags)
 		{
 			this.type = "oobb";
 			this.name = name;
@@ -228,6 +248,7 @@ namespace FbF
 			this.forward = new Vector3Json(forward);
 			this.color = new ColorJson(color);
 			this.layer = layer;
+			this.flags = flags;
 		}
 	}
 
@@ -237,6 +258,8 @@ namespace FbF
 		public string type { get; set; }
 		[DataMember]
 		public string name { get; set; }
+		[DataMember]
+		public PropertyFlags flags { get; set; }
 
 		[DataMember]
 		public Vector3Json position;
@@ -253,7 +276,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyCapsule(string name, Vector3 position, Vector3 direction, float radius, float height, Color color, string layer)
+		public PropertyCapsule(string name, Vector3 position, Vector3 direction, float radius, float height, Color color, string layer, PropertyFlags flags)
 		{
 			this.type = "capsule";
 			this.name = name;
@@ -263,6 +286,7 @@ namespace FbF
 			this.height = height;
 			this.color = new ColorJson(color);
 			this.layer = layer;
+			this.flags = flags;
 		}
 	}
 
@@ -273,6 +297,8 @@ namespace FbF
 		public string type { get; set; }
 		[DataMember]
 		public string name { get; set; }
+		[DataMember]
+		public PropertyFlags flags { get; set; }
 
 		[DataMember]
 		public Vector3Json position;
@@ -289,7 +315,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string layer)
+		public PropertyPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string layer, PropertyFlags flags)
 		{
 			this.type = "plane";
 			this.name = name;
@@ -300,6 +326,7 @@ namespace FbF
 			this.length = length;
 			this.color = new ColorJson(color);
 			this.layer = layer;
+			this.flags = flags;
 		}
 	}
 
@@ -310,6 +337,8 @@ namespace FbF
 		public string type { get; set; }
 		[DataMember]
 		public string name { get; set; }
+		[DataMember]
+		public PropertyFlags flags { get; set; }
 
 		[DataMember]
 		public Vector3Json origin;
@@ -320,7 +349,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyLine(string name, Vector3 origin, Vector3 destination, Color color, string layer)
+		public PropertyLine(string name, Vector3 origin, Vector3 destination, Color color, string layer, PropertyFlags flags)
 		{
 			this.type = "line";
 			this.name = name;
@@ -328,6 +357,7 @@ namespace FbF
 			this.destination = new Vector3Json(destination);
 			this.color = new ColorJson(color);
 			this.layer = layer;
+			this.flags = flags;
 		}
 	}
 
@@ -338,6 +368,8 @@ namespace FbF
 		public string type { get; set; }
 		[DataMember]
 		public string name { get; set; }
+		[DataMember]
+		public PropertyFlags flags { get; set; }
 
 		[DataMember]
 		public bool wireframe { get; set; }
@@ -351,7 +383,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer)
+		public PropertyMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer, PropertyFlags flags)
 		{
 			this.type = "mesh";
 			this.name = name;
@@ -360,6 +392,7 @@ namespace FbF
 			this.wireframe = wireframe;
 			this.color = new ColorJson(color);
 			this.layer = layer;
+			this.flags = flags;
 		}
 	}
 
@@ -370,6 +403,8 @@ namespace FbF
 		public string type { get; set; }
 		[DataMember]
 		public string name { get; set; }
+		[DataMember]
+		public PropertyFlags flags { get; set; }
 
 		[DataMember]
 		public Vector3Json[] points;
@@ -378,7 +413,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyPath(string name, Vector3[] points, Color color, string layer)
+		public PropertyPath(string name, Vector3[] points, Color color, string layer, PropertyFlags flags)
 		{
 			this.type = "path";
 			this.name = name;
@@ -389,6 +424,7 @@ namespace FbF
 			}
 			this.layer = layer;
 			this.color = new ColorJson(color);
+			this.flags = flags;
 		}
 	}
 
@@ -399,6 +435,8 @@ namespace FbF
 		public string type { get; set; }
 		[DataMember]
 		public string name { get; set; }
+		[DataMember]
+		public PropertyFlags flags { get; set; }
 
 		[DataMember]
 		public Vector3Json p1;
@@ -411,7 +449,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer)
+		public PropertyTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer, PropertyFlags flags)
 		{
 			this.type = "triangle";
 			this.name = name;
@@ -420,6 +458,7 @@ namespace FbF
 			this.p3 = new Vector3Json(p3);
 			this.layer = layer;
 			this.color = new ColorJson(color);
+			this.flags = flags;
 		}
 	}
 
@@ -440,6 +479,8 @@ namespace FbF
 		[DataMember]
 		public string name { get; set; }
 		[DataMember]
+		public PropertyFlags flags { get; set; }
+		[DataMember]
 		internal List<IPropertyData> value;
 
 		public PropertyGroup(string name)
@@ -448,7 +489,7 @@ namespace FbF
 			this.type = "group";
 			this.value = new List<IPropertyData>();
 		}
-		public void AddProperty<T>(string name, T value)
+		public void AddProperty<T>(string name, T value, PropertyFlags flags = PropertyFlags.None)
 		{
 			if (typeof(T) == typeof(bool))
 			{
@@ -478,6 +519,7 @@ namespace FbF
 			{
 				Debug.LogError ("Not implemented");
 			}
+			this.flags = flags;
 		}
 
 		public PropertyGroup AddPropertyGroup(string name)
@@ -509,65 +551,65 @@ namespace FbF
 			return entityRef;
 		}
 
-		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer)
+		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertySphere sphere = new PropertySphere(name, position, radius, color, layer);
+			PropertySphere sphere = new PropertySphere(name, position, radius, color, layer, flags);
 			this.value.Add(sphere);
 			return sphere;
 		}
 
-		public PropertyAABB AddAABB(string name, Vector3 position, Vector3 size, Color color, string layer)
+		public PropertyAABB AddAABB(string name, Vector3 position, Vector3 size, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyAABB aabb = new PropertyAABB(name, position, size, color, layer);
+			PropertyAABB aabb = new PropertyAABB(name, position, size, color, layer, flags);
 			this.value.Add(aabb);
 			return aabb;
 		}
 
-		public PropertyOOBB AddOOBB(string name, Vector3 position, Vector3 size, Vector3 up, Vector3 forward, Color color, string layer)
+		public PropertyOOBB AddOOBB(string name, Vector3 position, Vector3 size, Vector3 up, Vector3 forward, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyOOBB oobb = new PropertyOOBB(name, position, size, up, forward, color, layer);
+			PropertyOOBB oobb = new PropertyOOBB(name, position, size, up, forward, color, layer, flags);
 			this.value.Add(oobb);
 			return oobb;
 		}
 
-		public PropertyCapsule AddCapsule(string name, Vector3 position, Vector3 direction, float radius, float height, Color color, string layer)
+		public PropertyCapsule AddCapsule(string name, Vector3 position, Vector3 direction, float radius, float height, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyCapsule capsule = new PropertyCapsule(name, position, direction, radius, height, color, layer);
+			PropertyCapsule capsule = new PropertyCapsule(name, position, direction, radius, height, color, layer, flags);
 			this.value.Add(capsule);
 			return capsule;
 		}
 
-		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string layer)
+		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyPlane plane = new PropertyPlane(name, position, normal, up, width, length, color, layer);
+			PropertyPlane plane = new PropertyPlane(name, position, normal, up, width, length, color, layer, flags);
 			this.value.Add(plane);
 			return plane;
 		}
 
-		public PropertyLine AddLine(string name, Vector3 origin, Vector3 destination, Color color, string layer)
+		public PropertyLine AddLine(string name, Vector3 origin, Vector3 destination, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyLine line = new PropertyLine(name, origin, destination, color, layer);
+			PropertyLine line = new PropertyLine(name, origin, destination, color, layer, flags);
 			this.value.Add(line);
 			return line;
 		}
 
-		public PropertyMesh AddMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer)
+		public PropertyMesh AddMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyMesh mesh = new PropertyMesh(name, vertices, indices, wireframe, color, layer);
+			PropertyMesh mesh = new PropertyMesh(name, vertices, indices, wireframe, color, layer, flags);
 			this.value.Add(mesh);
 			return mesh;
 		}
 
-		public PropertyPath AddPath(string name, Vector3[] points, Color color, string layer)
+		public PropertyPath AddPath(string name, Vector3[] points, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyPath path = new PropertyPath(name, points, color, layer);
+			PropertyPath path = new PropertyPath(name, points, color, layer, flags);
 			this.value.Add(path);
 			return path;
 		}
 
-		public PropertyTriangle AddTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer)
+		public PropertyTriangle AddTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyTriangle triangle = new PropertyTriangle(name, p1, p2, p3, color, layer);
+			PropertyTriangle triangle = new PropertyTriangle(name, p1, p2, p3, color, layer, flags);
 			this.value.Add(triangle);
 			return triangle;
 		}

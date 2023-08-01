@@ -95,7 +95,7 @@ public class RecordingScript : MonoBehaviour
 			{
 				PropertyGroup group = entity.AddPropertyGroup("Colliders");
 				float maxScale = Mathf.Max(Mathf.Max(gameObject.transform.lossyScale.x, gameObject.transform.lossyScale.y), gameObject.transform.lossyScale.z);
-				group.AddSphere("SphereCollider", gameObject.transform.TransformPoint(sphereCollider.center), sphereCollider.radius * maxScale, new Color(1, 0.5f, 0.5f, 0.5f), "Colliders");
+				group.AddSphere("SphereCollider", gameObject.transform.TransformPoint(sphereCollider.center), sphereCollider.radius * maxScale, new Color(1, 0.5f, 0.5f, 0.5f), "Colliders", PropertyFlags.Collapsed);
 			}
 
 			if (RecordCollider && boxCollider)
@@ -106,7 +106,7 @@ public class RecordingScript : MonoBehaviour
 				size.z *= boxCollider.size.z;
 				PropertyGroup group = entity.AddPropertyGroup("Colliders");
 
-				group.AddOOBB("BoxCollider", boxCollider.bounds.center, size, gameObject.transform.up, gameObject.transform.forward, new Color(1, 0.5f, 0.5f, opacity), "Colliders");
+				group.AddOOBB("BoxCollider", boxCollider.bounds.center, size, gameObject.transform.up, gameObject.transform.forward, new Color(1, 0.5f, 0.5f, opacity), "Colliders", PropertyFlags.Collapsed);
 			}
 
 			if (RecordCollider && capsuleCollider)
@@ -122,7 +122,7 @@ public class RecordingScript : MonoBehaviour
 				if (capsuleCollider.direction == 2)
 					capsuleRef = gameObject.transform.forward;
 				
-				group.AddCapsule("CapsuleCollider", capsuleCollider.bounds.center, capsuleRef, capsuleCollider.radius, capsuleCollider.height, new Color(1, 0.5f, 0.5f, opacity), "Colliders");
+				group.AddCapsule("CapsuleCollider", capsuleCollider.bounds.center, capsuleRef, capsuleCollider.radius, capsuleCollider.height, new Color(1, 0.5f, 0.5f, opacity), "Colliders", PropertyFlags.Collapsed);
 			}
 		}
 
@@ -133,7 +133,7 @@ public class RecordingScript : MonoBehaviour
 			if (RecordVelocity && rigidBody)
 			{
 				PropertyGroup group = entity.AddPropertyGroup("RigidBody");
-				group.AddLine("Velocity", gameObject.transform.position, gameObject.transform.position + rigidBody.velocity, Color.blue, "Physics");
+				group.AddLine("Velocity", gameObject.transform.position, gameObject.transform.position + rigidBody.velocity, Color.blue, "Physics", PropertyFlags.Collapsed);
 			}
 		}
 
