@@ -133,6 +133,55 @@ namespace FbF
 	}
 
 	[DataContract]
+	public class Table
+	{
+		[DataMember]
+		public List<string> header;
+
+		[DataMember]
+		public List<List<string>> rows;
+
+		public Table(params string[] header)
+		{
+			this.header = new List<string>(header);
+			this.rows = new List<List<string>>();
+		}
+
+		public void AddRow(params string[] entries)
+		{
+			if (entries.Length == this.header.Count)
+				this.rows.Add(new List<string>(entries));
+			else
+				Debug.LogWarning("Adding entries to a table with a different number of header elements");
+		}
+	}
+
+	[DataContract]
+	public class PropertyTable : IPropertyData
+	{
+		[DataMember]
+		public string type { get; set; }
+
+		[DataMember]
+		public string name { get; set; }
+
+		[DataMember]
+		public Table value { get; set; }
+
+		public PropertyTable(string name, params string[] header)
+		{
+			type = "table";
+			this.name = name;
+			this.value = new Table(header);
+		}
+
+		public void AddRow(params string[] entries)
+		{
+			this.value.AddRow(entries);
+		}
+	}
+
+	[DataContract]
 	public class PropertyEntity : IPropertyData
 	{
 		[DataMember]
@@ -314,8 +363,10 @@ namespace FbF
 		public string layer;
 		[DataMember]
 		public ColorJson color;
+		[DataMember]
+		public string texture;
 
-		public PropertyPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string layer, PropertyFlags flags)
+		public PropertyPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string texture, string layer, PropertyFlags flags)
 		{
 			this.type = "plane";
 			this.name = name;
@@ -327,6 +378,7 @@ namespace FbF
 			this.color = new ColorJson(color);
 			this.layer = layer;
 			this.flags = flags;
+			this.texture = texture;
 		}
 	}
 
@@ -551,6 +603,13 @@ namespace FbF
 			return entityRef;
 		}
 
+		public PropertyTable AddTable(string name, params string[] header)
+		{
+			PropertyTable table = new PropertyTable(name, header);
+			this.value.Add(table);
+			return table;
+		}
+
 		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
 		{
 			PropertySphere sphere = new PropertySphere(name, position, radius, color, layer, flags);
@@ -579,9 +638,9 @@ namespace FbF
 			return capsule;
 		}
 
-		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
+		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string texture, string layer, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyPlane plane = new PropertyPlane(name, position, normal, up, width, length, color, layer, flags);
+			PropertyPlane plane = new PropertyPlane(name, position, normal, up, width, length, color, texture, layer, flags);
 			this.value.Add(plane);
 			return plane;
 		}
@@ -655,6 +714,11 @@ namespace FbF
 			return properties.AddEntityRef(name, entity);
 		}
 
+		public PropertyTable AddTable(string name, params string[] header)
+		{
+			return properties.AddTable(name, header);
+		}
+
 		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer)
 		{
 			return properties.AddSphere(name, position, radius, color, layer);
@@ -670,9 +734,9 @@ namespace FbF
 			return properties.AddOOBB(name, position, size, up, forward, color, layer);
 		}
 
-		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string layer)
+		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string texture, string layer)
 		{
-			return properties.AddPlane(name, position, normal, up, width, length, color, layer);
+			return properties.AddPlane(name, position, normal, up, width, length, color, texture, layer);
 		}
 
 		public PropertyLine AddLine(string name, Vector3 origin, Vector3 destination, Color color, string layer)
@@ -751,6 +815,11 @@ namespace FbF
 			return properties[0].AddEntityRef(name, entity);
 		}
 
+		public PropertyTable AddTable(string name, params string[] header)
+		{
+			return properties[0].AddTable(name, header);
+		}
+
 		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer)
 		{
 			return properties[0].AddSphere(name, position, radius, color, layer);
@@ -766,9 +835,9 @@ namespace FbF
 			return properties[0].AddOOBB(name, position, size, up, forward, color, layer);
 		}
 
-		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string layer)
+		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string texture, string layer)
 		{
-			return properties[0].AddPlane(name, position, normal, up, width, length, color, layer);
+			return properties[0].AddPlane(name, position, normal, up, width, length, color, texture, layer);
 		}
 
 		public PropertyLine AddLine(string name, Vector3 origin, Vector3 destination, Color color, string layer)
