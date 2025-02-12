@@ -60,6 +60,20 @@ namespace FbF
 			return recorder.RecordEntity(entity);
 		}
 
+		public static PropertyGroup RecordProperties(GameObject entity, string group)
+        {
+			EntityData entitydata = recorder.RecordEntity(entity);
+			return entitydata.AddPropertyGroup(group);
+			
+		}
+
+		public static PropertyGroup RecordEvent(GameObject entity, string name, string tag)
+		{
+			EntityData entitydata = recorder.RecordEntity(entity);
+			EventData eventData = entitydata.AddEvent(name, tag);
+			return eventData.properties;
+		}
+
 		public static bool IsRecordingOptionEnabled(string option)
 		{
 			bool isEnabled = false;

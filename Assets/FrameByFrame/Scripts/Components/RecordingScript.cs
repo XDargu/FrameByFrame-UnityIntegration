@@ -149,8 +149,7 @@ public class RecordingScript : MonoBehaviour
 		{
 			if (RecordCollider)
 			{
-				EntityData entity = FbFManager.RecordEntity(targetObject);
-				EventData eventData = entity.AddEvent("OnCollisionEnter", "Collision");
+				PropertyGroup eventData = FbFManager.RecordEvent(targetObject, "OnCollisionEnter", "Collision");
 				eventData.AddProperty("Collider name", collision.collider.name);
 
 				foreach (ContactPoint contact in collision.contacts)

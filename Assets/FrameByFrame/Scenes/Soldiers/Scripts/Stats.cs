@@ -32,8 +32,7 @@ public class Stats : MonoBehaviour
 
         if (FbFManager.IsRecordingOptionEnabled("Stats"))
         {
-            EntityData entity = FbFManager.RecordEntity(this.gameObject);
-            EventData damageEvent = entity.AddEvent("Damage received", "Damage");
+            PropertyGroup damageEvent = FbFManager.RecordEvent(this.gameObject, "Damage received", "Damage");
             falloff.RecordProperties(damageEvent);
             damageEvent.AddProperty("Final amount", amount);
             damageEvent.AddEntityRef("Instigator", instigator);
@@ -47,8 +46,7 @@ public class Stats : MonoBehaviour
     {
         if (FbFManager.IsRecordingOptionEnabled("Stats"))
         {
-            EntityData entity = FbFManager.RecordEntity(this.gameObject);
-            EventData damageEvent = entity.AddEvent("Damage received", "Damage");
+            PropertyGroup damageEvent = FbFManager.RecordEvent(this.gameObject, "Damage received", "Damage");
             damageEvent.AddProperty("Amount", amount);
             damageEvent.AddEntityRef("Instigator", instigator);
         }
@@ -74,8 +72,7 @@ public class Stats : MonoBehaviour
     {
         if (FbFManager.IsRecordingOptionEnabled("Stats"))
         {
-            EntityData entity = FbFManager.RecordEntity(this.gameObject);
-            EventData deathEvent = entity.AddEvent("Death", "Damage");
+            PropertyGroup deathEvent = FbFManager.RecordEvent(this.gameObject, "Death", "Damage");
             deathEvent.AddProperty("Health", Health);
         }
     }

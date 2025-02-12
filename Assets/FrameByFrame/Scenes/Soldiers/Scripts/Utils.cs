@@ -20,7 +20,7 @@ namespace Utils
             return Mathf.RoundToInt(Mathf.Lerp(damageMinDist, damageMaxDist, (clampedDist - minDist) / (maxDist - minDist)));
         }
 
-        public void RecordProperties(EventData eventData)
+        public void RecordProperties(PropertyGroup eventData)
         {
             eventData.AddProperty("Damage Min Distance", damageMinDist);
             eventData.AddProperty("Damage Min Distance", damageMinDist);

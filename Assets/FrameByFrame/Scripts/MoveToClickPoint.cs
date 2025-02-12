@@ -21,8 +21,7 @@ public class MoveToClickPoint : MonoBehaviour
             {
                 if (FbFManager.IsRecordingOptionEnabled("Navigation"))
                 {
-                    EntityData entity = FbFManager.RecordEntity(this.gameObject);
-                    EventData eventPath = entity.AddEvent("Destination changed", "Navigation");
+                    PropertyGroup eventPath = FbFManager.RecordEvent(this.gameObject, "Destination changed", "Navigation");
                     eventPath.AddSphere("Destination", hit.point, 0.2f, Color.yellow, "Pathfinding");
                     eventPath.AddComment("Destination was set to something");
                     eventPath.AddLine("Marker", hit.point, hit.point + Vector3.up * 5, Color.yellow, "Pathfinding");

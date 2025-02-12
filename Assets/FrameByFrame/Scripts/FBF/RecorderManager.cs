@@ -684,7 +684,7 @@ namespace FbF
 		[DataMember]
 		public string tag;
 		[DataMember]
-		private PropertyGroup properties;
+		public PropertyGroup properties;
 
 		public EventData(UInt32 index, string eventName, string eventTag = "")
         {
@@ -692,71 +692,6 @@ namespace FbF
 			name = eventName;
 			tag = eventTag;
 			properties = new PropertyGroup("properties");
-		}
-
-		public void AddProperty<T>(string name, T value)
-		{
-			properties.AddProperty(name, value);
-		}
-
-		public PropertyGroup AddPropertyGroup(string name)
-		{
-			return properties.AddPropertyGroup(name);
-		}
-
-		public PropertyComment AddComment(string text)
-		{
-			return properties.AddComment(text);
-		}
-
-		public PropertyEntity AddEntityRef(string name, GameObject entity)
-		{
-			return properties.AddEntityRef(name, entity);
-		}
-
-		public PropertyTable AddTable(string name, params string[] header)
-		{
-			return properties.AddTable(name, header);
-		}
-
-		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer)
-		{
-			return properties.AddSphere(name, position, radius, color, layer);
-		}
-
-		public PropertyAABB AddAABB(string name, Vector3 position, Vector3 size, Color color, string layer)
-		{
-			return properties.AddAABB(name, position, size, color, layer);
-		}
-
-		public PropertyOOBB AddOOBB(string name, Vector3 position, Vector3 size, Vector3 up, Vector3 forward, Color color, string layer)
-		{
-			return properties.AddOOBB(name, position, size, up, forward, color, layer);
-		}
-
-		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string texture, string layer)
-		{
-			return properties.AddPlane(name, position, normal, up, width, length, color, texture, layer);
-		}
-
-		public PropertyLine AddLine(string name, Vector3 origin, Vector3 destination, Color color, string layer)
-		{
-			return properties.AddLine(name, origin, destination, color, layer);
-		}
-
-		public PropertyMesh AddMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer)
-        {
-			return properties.AddMesh(name, vertices, indices, wireframe, color, layer);
-		}
-
-		public PropertyPath AddPath(string name, Vector3[] points, Color color, string layer)
-        {
-			return properties.AddPath(name, points, color, layer);
-        }
-
-		public PropertyTriangle AddTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer)
-        {
-			return properties.AddTriangle(name, p1, p2, p3, color, layer);
 		}
 	}
 
@@ -795,69 +730,9 @@ namespace FbF
 			return addedEvent;
 		}
 
-		public void AddProperty<T>(string name, T value)
-		{
-			properties[0].AddProperty(name, value);
-		}
-
 		public PropertyGroup AddPropertyGroup(string name)
 		{
 			return properties[0].AddPropertyGroup(name);
-		}
-
-		public PropertyComment AddComment(string text)
-		{
-			return properties[0].AddComment(text);
-		}
-
-		public PropertyEntity AddEntityRef(string name, GameObject entity)
-		{
-			return properties[0].AddEntityRef(name, entity);
-		}
-
-		public PropertyTable AddTable(string name, params string[] header)
-		{
-			return properties[0].AddTable(name, header);
-		}
-
-		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer)
-		{
-			return properties[0].AddSphere(name, position, radius, color, layer);
-		}
-
-		public PropertyAABB AddAABB(string name, Vector3 position, Vector3 size, Color color, string layer)
-		{
-			return properties[0].AddAABB(name, position, size, color, layer);
-		}
-
-		public PropertyOOBB AddOOBB(string name, Vector3 position, Vector3 size, Vector3 up, Vector3 forward, Color color, string layer)
-		{
-			return properties[0].AddOOBB(name, position, size, up, forward, color, layer);
-		}
-
-		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string texture, string layer)
-		{
-			return properties[0].AddPlane(name, position, normal, up, width, length, color, texture, layer);
-		}
-
-		public PropertyLine AddLine(string name, Vector3 origin, Vector3 destination, Color color, string layer)
-		{
-			return properties[0].AddLine(name, origin, destination, color, layer);
-		}
-
-		public PropertyMesh AddMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer)
-		{
-			return properties[0].AddMesh(name, vertices, indices, wireframe, color, layer);
-		}
-
-		public PropertyPath AddPath(string name, Vector3[] points, Color color, string layer)
-		{
-			return properties[0].AddPath(name, points, color, layer);
-		}
-
-		public PropertyTriangle AddTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer)
-		{
-			return properties[0].AddTriangle(name, p1, p2, p3, color, layer);
 		}
 
 		public void AddSpecialProperty<T>(string name, T value)

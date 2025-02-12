@@ -24,8 +24,7 @@ public class RecordNavMesh : MonoBehaviour
         {
             NavMeshTriangulation meshData = NavMesh.CalculateTriangulation();
 
-            EntityData entity = FbFManager.RecordEntity(this.gameObject);
-            PropertyGroup group = entity.AddPropertyGroup("Navigation");
+            PropertyGroup group = FbFManager.RecordProperties(this.gameObject, "Navigation");
             group.AddMesh("NavMesh", FlattenPositions(meshData.vertices), ReverseIndices(meshData.indices), true, new Color(Color.cyan.r, Color.cyan.g, Color.cyan.b, 0.5f), "NavMesh");
         }
     }

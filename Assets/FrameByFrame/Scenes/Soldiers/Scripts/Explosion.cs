@@ -23,18 +23,23 @@ public class Explosion : MonoBehaviour
         
     }
 
-    public void Explode()
+    [System.Diagnostics.Conditional("DEBUG")]
+    void RecordExplosion(Vector3 explosionPos)
     {
-        Vector3 explosionPos = transform.position + Vector3.up;
-
         if (FbFManager.IsRecordingOptionEnabled("Explosions"))
         {
-            EntityData entity = FbFManager.RecordEntity(this.gameObject);
-            EventData deathEvent = entity.AddEvent("Explosion", "Explosions");
+            PropertyGroup deathEvent = FbFManager.RecordEvent(this.gameObject, "Explosion", "Explosions");
             deathEvent.AddProperty("Origin", explosionPos);
             deathEvent.AddProperty("Radius", Radius);
             deathEvent.AddSphere("", explosionPos, Radius, new Color(1.0f, 1.0f, 0.0f, 0.2f), "Explosions");
         }
+    }
+
+    public void Explode()
+    {
+        Vector3 explosionPos = transform.position + Vector3.up;
+
+        RecordExplosion(explosionPos);
 
         ParticleSystem explosionObject = GameObject.Instantiate(explosionParticles);
         explosionObject.transform.position = explosionPos;

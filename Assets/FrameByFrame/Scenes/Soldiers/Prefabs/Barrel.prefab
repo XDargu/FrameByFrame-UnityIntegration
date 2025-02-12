@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: -4866480144657041998}
   - component: {fileID: 1673165204298543757}
   - component: {fileID: 4675490225277665347}
+  - component: {fileID: 1950649500355115967}
   m_Layer: 0
   m_Name: Barrel
   m_TagString: Explosive
@@ -234,6 +235,24 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.6, y: 1.2, z: 0.6}
   m_Center: {x: 0, y: 0.6, z: 0}
+--- !u!114 &1950649500355115967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6624189702597729754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f60d89f4ce0791e41aed0705dacb50aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RecordCollider: 1
+  RecordVelocity: 1
+  UseFixedUpdate: 0
+  RecordAllChildren: 0
+  MergeChildrenRecordings: 0
+  opacity: 0.7
 --- !u!1 &6624189702751698980
 GameObject:
   m_ObjectHideFlags: 0
