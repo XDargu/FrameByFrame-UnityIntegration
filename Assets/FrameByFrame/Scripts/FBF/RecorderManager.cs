@@ -80,6 +80,12 @@ namespace FbF
 			return entityData;
 		}
 
+		public void RecordResource(string path, string type, string content)
+		{
+			Resource resource = new Resource(path, type, content);
+			frameData.resources.Add(resource);
+		}
+
 		public override void Init(WebSocketServer server)
 		{
 			m_server = server;
@@ -215,6 +221,7 @@ namespace FbF
             }
 
 			frameData.entities.Clear();
+			frameData.resources.Clear();
 			eventIdx = 0;
 		}
 

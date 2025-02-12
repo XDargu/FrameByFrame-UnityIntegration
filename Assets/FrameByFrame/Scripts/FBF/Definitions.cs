@@ -735,6 +735,24 @@ namespace FbF
 	}
 
 	[DataContract]
+	public class Resource
+    {
+		[DataMember]
+		public string path;
+		[DataMember]
+		public string textData;
+		[DataMember]
+		public string type;
+
+		public Resource(string path, string type, string content)
+        {
+			this.path = path;
+			this.type = type;
+			this.textData = content;
+		}
+    }
+
+	[DataContract]
 	public class FrameData
 	{
 		[DataMember]
@@ -753,10 +771,13 @@ namespace FbF
 		public List<EntityData> entities;
 		[DataMember]
 		public CoordinateSystem coordSystem = CoordinateSystem.LeftHand;
+		[DataMember]
+		public List<Resource> resources;
 
 		public FrameData()
 		{
 			entities = new List<EntityData>();
+			resources = new List<Resource>();
 		}
 	}
 

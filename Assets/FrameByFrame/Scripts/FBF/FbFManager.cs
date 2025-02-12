@@ -74,6 +74,11 @@ namespace FbF
 			return eventData.properties;
 		}
 
+		public static void RecordResource(string path, string type, string content)
+        {
+			recorder.RecordResource(path, type, content);
+		}
+
 		public static bool IsRecordingOptionEnabled(string option)
 		{
 			bool isEnabled = false;
