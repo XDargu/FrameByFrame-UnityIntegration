@@ -17,12 +17,7 @@ public class Stats : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (FbFManager.IsRecordingOptionEnabled("Stats"))
-        {
-            EntityData entity = FbFManager.RecordEntity(this.gameObject);
-            PropertyGroup group = entity.AddPropertyGroup("Stats");
-            group.AddProperty("Health", Health);
-        }
+        RecordStats();
     }
 
     public void ApplyDamage(DamageFallOff falloff, Vector3 origin, Vector3 destination, GameObject instigator)
@@ -56,11 +51,7 @@ public class Stats : MonoBehaviour
 
     public void Kill()
     {
-        if (FbFManager.IsRecordingOptionEnabled("Stats"))
-        {
-            PropertyGroup deathEvent = FbFManager.RecordEvent(this.gameObject, "Death", "Damage");
-            deathEvent.AddProperty("Health", Health);
-        }
+        RecordDeath();
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
@@ -84,6 +75,27 @@ public class Stats : MonoBehaviour
             PropertyGroup damageEvent = FbFManager.RecordEvent(this.gameObject, "Damage received", "Damage");
             damageEvent.AddProperty("Final amount", amount);
             damageEvent.AddEntityRef("Instigator", instigator);
+        }
+    }
+
+    [System.Diagnostics.Conditional("DEBUG")]
+    void RecordStats()
+    {
+        if (FbFManager.IsRecordingOptionEnabled("Stats"))
+        {
+            EntityData entity = FbFManager.RecordEntity(this.gameObject);
+            PropertyGroup group = entity.AddPropertyGroup("Stats");
+            group.AddProperty("Health", Health, new Icon("heart"));
+        }
+    }
+
+    [System.Diagnostics.Conditional("DEBUG")]
+    void RecordDeath()
+    {
+        if (FbFManager.IsRecordingOptionEnabled("Stats"))
+        {
+            PropertyGroup deathEvent = FbFManager.RecordEvent(this.gameObject, "Death", "Damage");
+            deathEvent.AddProperty("Health", Health);
         }
     }
 }

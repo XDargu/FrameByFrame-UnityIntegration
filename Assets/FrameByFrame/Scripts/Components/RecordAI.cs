@@ -31,17 +31,24 @@ public class RecordAI : MonoBehaviour
             if (FbFManager.IsRecordingOptionEnabled("Navigation"))
             {
                 EntityData entity = FbFManager.RecordEntity(this.gameObject);
-                PropertyGroup group = entity.AddPropertyGroup("Navigation");
+                PropertyGroup group = entity.AddPropertyGroup("NavMeshAgent");
                 NavMeshPath path = agent.path;
-                group.AddPath("Path", path.corners, Color.red, "Pathfinding");
 
-                for (int i = 0; i < path.corners.Length; ++i)
+                group.AddProperty("Enabled", agent.enabled, agent.enabled ? new Icon("check-circle", "green") : new Icon("times-circle", "red"));
+                group.AddProperty("Path Status", path.status.ToString());
+
+                if (path.corners.Length > 0)
                 {
-                    group.AddSphere("Corner " + i, path.corners[i], 0.1f, Color.red, "Pathfinding");
+                    group.AddPath("Path", path.corners, Color.red, "Pathfinding");
 
-                    if (i > 0)
+                    for (int i = 0; i < path.corners.Length; ++i)
                     {
-                        group.AddLine("Segment " + i, path.corners[i - 1], path.corners[i], Color.red, "Pathfinding");
+                        group.AddSphere("Corner " + i, path.corners[i], 0.1f, Color.red, "Pathfinding", null, PropertyFlags.Hidden);
+
+                        if (i > 0)
+                        {
+                            group.AddLine("Segment " + i, path.corners[i - 1], path.corners[i], Color.red, "Pathfinding", null, PropertyFlags.Hidden);
+                        }
                     }
                 }
             }

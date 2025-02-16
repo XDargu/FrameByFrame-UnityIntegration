@@ -25,20 +25,21 @@ public class RecordAnimations : MonoBehaviour
         if (FbFManager.IsRecordingOptionEnabled("Animations"))
         {
             PropertyGroup animations = FbFManager.RecordProperties(gameObject, "Animations");
-            animations.AddProperty("Speed", animator.speed);
-            animations.AddProperty("Has Root Motion", animator.hasRootMotion);
+            animations.AddProperty("Enabled", animator.enabled, animator.enabled ? new Icon("check-circle", "green") : new Icon("times-circle", "red"));
+            animations.AddProperty("Speed", animator.speed, new Icon("tachometer-alt"));
+            animations.AddProperty("Has Root Motion", animator.hasRootMotion, new Icon("map-marker"));
 
-            PropertyGroup layers = animations.AddPropertyGroup("Layers");
+            PropertyGroup layers = animations.AddPropertyGroup("Layers", new Icon("layer-group"));
 
             for (int i=0; i<animator.layerCount; ++i)
             {
                 AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(i);
 
-                PropertyGroup layer = layers.AddPropertyGroup(animator.GetLayerName(i));
-                layer.AddProperty("Weight", animator.GetLayerWeight(i));
-                layer.AddProperty("Loop", stateInfo.loop);
-                layer.AddProperty("Speed", stateInfo.speed);
-                layer.AddProperty("Norm Time", stateInfo.normalizedTime);
+                PropertyGroup layer = layers.AddPropertyGroup(animator.GetLayerName(i), new Icon("layer-group"));
+                layer.AddProperty("Weight", animator.GetLayerWeight(i), new Icon("weight-hanging"));
+                layer.AddProperty("Loop", stateInfo.loop, new Icon("undo"));
+                layer.AddProperty("Speed", stateInfo.speed, new Icon("tachometer-alt"));
+                layer.AddProperty("Norm Time", stateInfo.normalizedTime, new Icon("clock"));
 
                 float normTime = stateInfo.normalizedTime % 1f;
 
@@ -46,10 +47,10 @@ public class RecordAnimations : MonoBehaviour
 
                 for (int j = 0; j < clipInfo.Length; ++j)
                 {
-                    PropertyGroup clip = layer.AddPropertyGroup(clipInfo[j].clip.name);
-                    clip.AddProperty("Weight", clipInfo[j].weight);
-                    clip.AddProperty("Length", clipInfo[j].clip.length);
-                    clip.AddProperty("Time", clipInfo[j].clip.length * normTime);
+                    PropertyGroup clip = layer.AddPropertyGroup(clipInfo[j].clip.name, new Icon("walking"));
+                    clip.AddProperty("Weight", clipInfo[j].weight, new Icon("weight-hanging"));
+                    clip.AddProperty("Length", clipInfo[j].clip.length, new Icon("history"));
+                    clip.AddProperty("Time", clipInfo[j].clip.length * normTime, new Icon("clock"));
 
                 }
             }
