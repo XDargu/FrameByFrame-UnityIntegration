@@ -17,8 +17,7 @@ public class RecordPhysics : MonoBehaviour
 	bool isOriginalObject = true;
 	GameObject targetObject;
 
-	[Range(0.0f, 1.0f)]
-	public float opacity = 1.0f;
+	public Color color = Color.red;
 
 	SphereCollider sphereCollider;
 	BoxCollider boxCollider;
@@ -60,7 +59,7 @@ public class RecordPhysics : MonoBehaviour
 					RecordPhysics recordingScript = childObject.AddComponent<RecordPhysics>();
 					recordingScript.RecordCollider = RecordCollider;
 					recordingScript.RecordVelocity = RecordVelocity;
-					recordingScript.opacity = opacity;
+					recordingScript.color = color;
 					recordingScript.RecordAllChildren = RecordAllChildren;
 					recordingScript.MergeChildrenRecordings = MergeChildrenRecordings;
 					recordingScript.targetObject = MergeChildrenRecordings ? targetObject : recordingScript.gameObject;
@@ -97,7 +96,7 @@ public class RecordPhysics : MonoBehaviour
 			{
 				PropertyGroup group = entity.AddPropertyGroup("Colliders");
 				float maxScale = Mathf.Max(Mathf.Max(gameObject.transform.lossyScale.x, gameObject.transform.lossyScale.y), gameObject.transform.lossyScale.z);
-				group.AddSphere("SphereCollider", gameObject.transform.TransformPoint(sphereCollider.center), sphereCollider.radius * maxScale, new Color(1, 0.5f, 0.5f, 0.5f), "Colliders", null, PropertyFlags.Collapsed);
+				group.AddSphere("SphereCollider", gameObject.transform.TransformPoint(sphereCollider.center), sphereCollider.radius * maxScale, color, "Colliders", null, PropertyFlags.Collapsed);
 			}
 
 			if (RecordCollider && boxCollider)
@@ -108,7 +107,7 @@ public class RecordPhysics : MonoBehaviour
 				size.z *= boxCollider.size.z;
 				PropertyGroup group = entity.AddPropertyGroup("Colliders");
 
-				group.AddOOBB("BoxCollider", boxCollider.bounds.center, size, gameObject.transform.up, gameObject.transform.forward, new Color(1, 0.5f, 0.5f, opacity), "Colliders", null, PropertyFlags.Collapsed);
+				group.AddOOBB("BoxCollider", boxCollider.bounds.center, size, gameObject.transform.up, gameObject.transform.forward, color, "Colliders", null, PropertyFlags.Collapsed);
 			}
 
 			if (RecordCollider && capsuleCollider)
@@ -124,7 +123,7 @@ public class RecordPhysics : MonoBehaviour
 				if (capsuleCollider.direction == 2)
 					capsuleRef = gameObject.transform.forward;
 				
-				group.AddCapsule("CapsuleCollider", capsuleCollider.bounds.center, capsuleRef, capsuleCollider.radius, capsuleCollider.height, new Color(1, 0.5f, 0.5f, opacity), "Colliders", null, PropertyFlags.Collapsed);
+				group.AddCapsule("CapsuleCollider", capsuleCollider.bounds.center, capsuleRef, capsuleCollider.radius, capsuleCollider.height, color, "Colliders", null, PropertyFlags.Collapsed);
 			}
 		}
 

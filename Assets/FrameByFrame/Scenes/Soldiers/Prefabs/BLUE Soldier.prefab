@@ -387,6 +387,7 @@ MonoBehaviour:
   UseFixedUpdate: 1
   RecordAllChildren: 1
   MergeChildrenRecordings: 0
+  color: {r: 0.030931473, g: 0, b: 1, a: 1}
   opacity: 1
 --- !u!114 &-4266176133749431485
 MonoBehaviour:
