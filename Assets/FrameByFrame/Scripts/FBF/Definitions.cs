@@ -667,11 +667,16 @@ namespace FbF
 		[DataMember]
 		internal List<IPropertyData> value;
 
-		public PropertyGroup(string name)
+		public PropertyGroup(string name, Icon? icon = null)
 		{
 			this.name = name;
 			this.type = "group";
 			this.value = new List<IPropertyData>();
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 		public void AddProperty<T>(string name, T value, Icon? icon = null, PropertyFlags flags = PropertyFlags.None)
 		{
@@ -705,7 +710,7 @@ namespace FbF
 			}
 		}
 
-		public PropertyGroup AddPropertyGroup(string name)
+		public PropertyGroup AddPropertyGroup(string name, Icon? icon = null)
 		{
 			IPropertyData existingGroup = this.value.FindLast((property) => { return property.name == name && property.type == "group"; });
 			if (existingGroup != null)
@@ -714,7 +719,7 @@ namespace FbF
 			}
 			else
 			{
-				PropertyGroup group = new PropertyGroup(name);
+				PropertyGroup group = new PropertyGroup(name, icon);
 				this.value.Add(group);
 				return group;
 			}
@@ -861,9 +866,9 @@ namespace FbF
 			return addedEvent;
 		}
 
-		public PropertyGroup AddPropertyGroup(string name)
+		public PropertyGroup AddPropertyGroup(string name, Icon? icon = null)
 		{
-			return properties[0].AddPropertyGroup(name);
+			return properties[0].AddPropertyGroup(name, icon);
 		}
 
 		public void AddSpecialProperty<T>(string name, T value)
