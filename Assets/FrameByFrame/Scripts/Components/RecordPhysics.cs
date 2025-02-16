@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FbF;
 
-public class RecordingScript : MonoBehaviour
+public class RecordPhysics : MonoBehaviour
 {
 
 	public bool RecordCollider;
@@ -56,7 +56,7 @@ public class RecordingScript : MonoBehaviour
 				GameObject childObject = gameObject.transform.GetChild(i).gameObject;
 				if (childObject)
 				{
-					RecordingScript recordingScript = childObject.AddComponent<RecordingScript>();
+					RecordPhysics recordingScript = childObject.AddComponent<RecordPhysics>();
 					recordingScript.RecordCollider = RecordCollider;
 					recordingScript.RecordVelocity = RecordVelocity;
 					recordingScript.opacity = opacity;

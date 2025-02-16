@@ -5,7 +5,7 @@ using FbF;
 using System.IO;
 using System;
 
-public class RecordingPlane : MonoBehaviour {
+public class RecordPlane : MonoBehaviour {
 
 	public float width = 1.0f;
 	public float length = 1.0f;

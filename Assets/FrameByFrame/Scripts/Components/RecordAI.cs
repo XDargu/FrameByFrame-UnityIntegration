@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using FbF;
 
-public class AIRecordingScript : MonoBehaviour
+public class RecordAI : MonoBehaviour
 {
     public bool RecordPath = true;
 
