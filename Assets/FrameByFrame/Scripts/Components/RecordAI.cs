@@ -20,6 +20,12 @@ public class RecordAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Record();
+    }
+
+    [System.Diagnostics.Conditional("DEBUG")]
+    void Record()
+    {
         if (RecordPath)
         {
             if (FbFManager.IsRecordingOptionEnabled("Navigation"))

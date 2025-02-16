@@ -18,6 +18,7 @@ public class RecordNavMesh : MonoBehaviour
         RecordData();
     }
 
+    [System.Diagnostics.Conditional("DEBUG")]
     void RecordData()
     {
         if (FbFManager.IsRecordingOptionEnabled("NavMesh"))

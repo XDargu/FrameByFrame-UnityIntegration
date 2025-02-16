@@ -30,6 +30,7 @@ public class RecordPhysics : MonoBehaviour
 		Init();
 	}
 
+	[System.Diagnostics.Conditional("DEBUG")]
 	void Init()
     {
 		Application.targetFrameRate = 60;
@@ -85,6 +86,7 @@ public class RecordPhysics : MonoBehaviour
 		}
 	}
 
+	[System.Diagnostics.Conditional("DEBUG")]
 	void Record()
 	{
 		if (FbFManager.IsRecordingOptionEnabled("Colliders"))

@@ -19,6 +19,7 @@ public class RecordAnimations : MonoBehaviour
         Record();
     }
 
+    [System.Diagnostics.Conditional("DEBUG")]
     void Record()
     {
         if (FbFManager.IsRecordingOptionEnabled("Animations"))

@@ -30,27 +30,13 @@ public class Stats : MonoBehaviour
         float distance = (origin - destination).magnitude;
         int amount = falloff.CalculateDamage(distance);
 
-        if (FbFManager.IsRecordingOptionEnabled("Stats"))
-        {
-            PropertyGroup damageEvent = FbFManager.RecordEvent(this.gameObject, "Damage received", "Damage");
-            falloff.RecordProperties(damageEvent);
-            damageEvent.AddProperty("Final amount", amount);
-            damageEvent.AddEntityRef("Instigator", instigator);
-            damageEvent.AddLine("", origin, destination, Color.red, "Stats");
-        }
-
+        RecordDamage(falloff, origin, destination, instigator, amount);
         DealDamage(amount);
     }
 
     public void ApplyDamage(int amount, GameObject instigator)
     {
-        if (FbFManager.IsRecordingOptionEnabled("Stats"))
-        {
-            PropertyGroup damageEvent = FbFManager.RecordEvent(this.gameObject, "Damage received", "Damage");
-            damageEvent.AddProperty("Amount", amount);
-            damageEvent.AddEntityRef("Instigator", instigator);
-        }
-
+        RecordDamage(instigator, amount);
         DealDamage(amount);
     }
 
@@ -74,6 +60,30 @@ public class Stats : MonoBehaviour
         {
             PropertyGroup deathEvent = FbFManager.RecordEvent(this.gameObject, "Death", "Damage");
             deathEvent.AddProperty("Health", Health);
+        }
+    }
+
+    [System.Diagnostics.Conditional("DEBUG")]
+    void RecordDamage(DamageFallOff falloff, Vector3 origin, Vector3 destination, GameObject instigator, int amount)
+    {
+        if (FbFManager.IsRecordingOptionEnabled("Stats"))
+        {
+            PropertyGroup damageEvent = FbFManager.RecordEvent(this.gameObject, "Damage received", "Damage");
+            falloff.RecordProperties(damageEvent);
+            damageEvent.AddProperty("Final amount", amount);
+            damageEvent.AddEntityRef("Instigator", instigator);
+            damageEvent.AddLine("", origin, destination, Color.red, "Stats");
+        }
+    }
+
+    [System.Diagnostics.Conditional("DEBUG")]
+    void RecordDamage(GameObject instigator, int amount)
+    {
+        if (FbFManager.IsRecordingOptionEnabled("Stats"))
+        {
+            PropertyGroup damageEvent = FbFManager.RecordEvent(this.gameObject, "Damage received", "Damage");
+            damageEvent.AddProperty("Final amount", amount);
+            damageEvent.AddEntityRef("Instigator", instigator);
         }
     }
 }

@@ -32,6 +32,12 @@ class StateMachine
     public void Update()
     {
         currentState.Update(this);
+        RecordUpdate();
+    }
+
+    [System.Diagnostics.Conditional("DEBUG")]
+    void RecordUpdate()
+    {
         if (FbFManager.IsRecordingOptionEnabled("AI"))
         {
             EntityData entity = FbFManager.RecordEntity(soldier.gameObject);

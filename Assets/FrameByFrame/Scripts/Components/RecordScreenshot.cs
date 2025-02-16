@@ -16,6 +16,12 @@ public class RecordScreenshot : MonoBehaviour
 	// Update is called once per frame
 	void Update()
     {
+		Record();
+	}
+
+	[System.Diagnostics.Conditional("DEBUG")]
+	void Record()
+    {
 		if (Application.isPlaying)
 		{
 			// Add screenshot
@@ -23,7 +29,7 @@ public class RecordScreenshot : MonoBehaviour
 									"Screenshot_" +
 									(UInt32)Time.frameCount +
 									".png";
-			
+
 			Texture2D tex = ScreenCapture.CaptureScreenshotAsTexture();
 			byte[] jpgTex = tex.EncodeToJPG(35);
 			FbFManager.RecordResource(screenshotName, "image/jpg", "{\"blob\":\"data:image/jpg;base64," + Convert.ToBase64String(jpgTex) + "\" }");
