@@ -58,10 +58,33 @@ namespace FbF
 			a = value.a;
 		}
 	}
+
+	public struct Icon
+    {
+		public string icon;
+		public string color;
+
+		public Icon(string icon, string color)
+		{
+			this.icon = icon;
+			this.color = color;
+		}
+
+		public Icon(string icon)
+		{
+			this.icon = icon;
+			this.color = "";
+		}
+
+		public static readonly Icon None = new Icon("", "");
+	}
+
 	public interface IPropertyData
 	{
 		string type { get; set; }
 		string name { get; set; }
+		string icon { get; set; }
+		string icolor { get; set; }
 	}
 
 	[Flags]
@@ -82,14 +105,23 @@ namespace FbF
 		[DataMember]
 		public PropertyFlags flags { get; set; }
 		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
+		[DataMember]
 		public T value;
 
-		public PropertyData(string propType, string propName, T propValue)
+		public PropertyData(string propType, string propName, T propValue, Icon ? icon, PropertyFlags flags = PropertyFlags.None)
 		{
 			type = propType;
 			name = propName;
 			value = propValue;
-			flags = PropertyFlags.None;
+			this.flags = flags;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -101,12 +133,21 @@ namespace FbF
 		[DataMember]
 		public string name { get; set; }
 		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
+		[DataMember]
 		public string value;
 
-		public PropertyComment(string value)
+		public PropertyComment(string value, Icon? icon)
 		{
 			type = "comment";
 			this.value = value;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -157,6 +198,10 @@ namespace FbF
 
 		[DataMember]
 		public string name { get; set; }
+		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
 
 		[DataMember]
 		public Table value { get; set; }
@@ -181,15 +226,24 @@ namespace FbF
 		public string type { get; set; }
 		[DataMember]
 		public string name { get; set; }
+		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
 
 		[DataMember]
 		public EntityRef value;
 
-		public PropertyEntity(string name, GameObject entity)
+		public PropertyEntity(string name, GameObject entity, Icon? icon)
 		{
 			type = "eref";
 			this.value = new EntityRef(entity);
 			this.name = name;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -202,6 +256,10 @@ namespace FbF
 		public string name { get; set; }
 		[DataMember]
 		public PropertyFlags flags { get; set; }
+		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
 
 		[DataMember]
 		public Vector3Json position;
@@ -212,7 +270,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertySphere(string name, Vector3 position, float radius, Color color, string layer, PropertyFlags flags)
+		public PropertySphere(string name, Vector3 position, float radius, Color color, string layer, Icon? icon, PropertyFlags flags)
 		{
 			this.type = "sphere";
 			this.name = name;
@@ -221,6 +279,11 @@ namespace FbF
 			this.color = new ColorJson(color);
 			this.layer = layer;
 			this.flags = flags;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -233,6 +296,10 @@ namespace FbF
 		public string name { get; set; }
 		[DataMember]
 		public PropertyFlags flags { get; set; }
+		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
 
 		[DataMember]
 		public Vector3Json position;
@@ -243,7 +310,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyAABB(string name, Vector3 position, Vector3 size, Color color, string layer, PropertyFlags flags)
+		public PropertyAABB(string name, Vector3 position, Vector3 size, Color color, string layer, Icon? icon, PropertyFlags flags)
 		{
 			this.type = "aabb";
 			this.name = name;
@@ -252,6 +319,11 @@ namespace FbF
 			this.color = new ColorJson(color);
 			this.layer = layer;
 			this.flags = flags;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -264,6 +336,10 @@ namespace FbF
 		public string name { get; set; }
 		[DataMember]
 		public PropertyFlags flags { get; set; }
+		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
 
 		[DataMember]
 		public Vector3Json position;
@@ -280,7 +356,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyOOBB(string name, Vector3 position, Vector3 size, Vector3 up, Vector3 forward, Color color, string layer, PropertyFlags flags)
+		public PropertyOOBB(string name, Vector3 position, Vector3 size, Vector3 up, Vector3 forward, Color color, string layer, Icon? icon, PropertyFlags flags)
 		{
 			this.type = "oobb";
 			this.name = name;
@@ -291,6 +367,11 @@ namespace FbF
 			this.color = new ColorJson(color);
 			this.layer = layer;
 			this.flags = flags;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -302,6 +383,10 @@ namespace FbF
 		public string name { get; set; }
 		[DataMember]
 		public PropertyFlags flags { get; set; }
+		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
 
 		[DataMember]
 		public Vector3Json position;
@@ -318,7 +403,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyCapsule(string name, Vector3 position, Vector3 direction, float radius, float height, Color color, string layer, PropertyFlags flags)
+		public PropertyCapsule(string name, Vector3 position, Vector3 direction, float radius, float height, Color color, string layer, Icon? icon, PropertyFlags flags)
 		{
 			this.type = "capsule";
 			this.name = name;
@@ -329,6 +414,11 @@ namespace FbF
 			this.color = new ColorJson(color);
 			this.layer = layer;
 			this.flags = flags;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -341,6 +431,10 @@ namespace FbF
 		public string name { get; set; }
 		[DataMember]
 		public PropertyFlags flags { get; set; }
+		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
 
 		[DataMember]
 		public Vector3Json position;
@@ -359,7 +453,7 @@ namespace FbF
 		[DataMember]
 		public string texture;
 
-		public PropertyPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string texture, string layer, PropertyFlags flags)
+		public PropertyPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string texture, string layer, Icon? icon, PropertyFlags flags)
 		{
 			this.type = "plane";
 			this.name = name;
@@ -372,6 +466,11 @@ namespace FbF
 			this.layer = layer;
 			this.flags = flags;
 			this.texture = texture;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -384,6 +483,10 @@ namespace FbF
 		public string name { get; set; }
 		[DataMember]
 		public PropertyFlags flags { get; set; }
+		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
 
 		[DataMember]
 		public Vector3Json origin;
@@ -394,7 +497,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyLine(string name, Vector3 origin, Vector3 destination, Color color, string layer, PropertyFlags flags)
+		public PropertyLine(string name, Vector3 origin, Vector3 destination, Color color, string layer, Icon? icon, PropertyFlags flags)
 		{
 			this.type = "line";
 			this.name = name;
@@ -403,6 +506,11 @@ namespace FbF
 			this.color = new ColorJson(color);
 			this.layer = layer;
 			this.flags = flags;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -415,6 +523,10 @@ namespace FbF
 		public string name { get; set; }
 		[DataMember]
 		public PropertyFlags flags { get; set; }
+		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
 
 		[DataMember]
 		public bool wireframe { get; set; }
@@ -428,7 +540,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer, PropertyFlags flags)
+		public PropertyMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer, Icon? icon, PropertyFlags flags)
 		{
 			this.type = "mesh";
 			this.name = name;
@@ -438,6 +550,11 @@ namespace FbF
 			this.color = new ColorJson(color);
 			this.layer = layer;
 			this.flags = flags;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -450,6 +567,10 @@ namespace FbF
 		public string name { get; set; }
 		[DataMember]
 		public PropertyFlags flags { get; set; }
+		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
 
 		[DataMember]
 		public Vector3Json[] points;
@@ -458,7 +579,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyPath(string name, Vector3[] points, Color color, string layer, PropertyFlags flags)
+		public PropertyPath(string name, Vector3[] points, Color color, string layer, Icon? icon, PropertyFlags flags)
 		{
 			this.type = "path";
 			this.name = name;
@@ -470,6 +591,11 @@ namespace FbF
 			this.layer = layer;
 			this.color = new ColorJson(color);
 			this.flags = flags;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -482,6 +608,10 @@ namespace FbF
 		public string name { get; set; }
 		[DataMember]
 		public PropertyFlags flags { get; set; }
+		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
 
 		[DataMember]
 		public Vector3Json p1;
@@ -494,7 +624,7 @@ namespace FbF
 		[DataMember]
 		public ColorJson color;
 
-		public PropertyTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer, PropertyFlags flags)
+		public PropertyTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer, Icon? icon, PropertyFlags flags)
 		{
 			this.type = "triangle";
 			this.name = name;
@@ -504,6 +634,11 @@ namespace FbF
 			this.layer = layer;
 			this.color = new ColorJson(color);
 			this.flags = flags;
+			if (icon.HasValue)
+			{
+				this.icon = icon.Value.icon;
+				this.icolor = icon.Value.color;
+			}
 		}
 	}
 
@@ -526,6 +661,10 @@ namespace FbF
 		[DataMember]
 		public PropertyFlags flags { get; set; }
 		[DataMember]
+		public string icon { get; set; }
+		[DataMember]
+		public string icolor { get; set; }
+		[DataMember]
 		internal List<IPropertyData> value;
 
 		public PropertyGroup(string name)
@@ -534,37 +673,36 @@ namespace FbF
 			this.type = "group";
 			this.value = new List<IPropertyData>();
 		}
-		public void AddProperty<T>(string name, T value, PropertyFlags flags = PropertyFlags.None)
+		public void AddProperty<T>(string name, T value, Icon? icon = null, PropertyFlags flags = PropertyFlags.None)
 		{
 			if (typeof(T) == typeof(bool))
 			{
-				this.value.Add(new PropertyData<bool>("boolean", name, (bool)(object)value));
+				this.value.Add(new PropertyData<bool>("boolean", name, (bool)(object)value, icon, flags));
 			}
 			else if (typeof(T) == typeof(string))
 			{
-				this.value.Add(new PropertyData<string>("string", name, (string)(object)value));
+				this.value.Add(new PropertyData<string>("string", name, (string)(object)value, icon, flags));
 			}
 			else if (typeof(T) == typeof(int))
 			{
-				this.value.Add(new PropertyData<int>("number", name, (int)(object)value));
+				this.value.Add(new PropertyData<int>("number", name, (int)(object)value, icon, flags));
 			}
 			else if (typeof(T) == typeof(float))
 			{
-				this.value.Add(new PropertyData<float>("number", name, (float)(object)value));
+				this.value.Add(new PropertyData<float>("number", name, (float)(object)value, icon, flags));
 			}
 			else if (typeof(T) == typeof(Vector2))
 			{
-				this.value.Add(new PropertyData<Vector2Json>("vec2", name, new Vector2Json((Vector2)(object)value)));
+				this.value.Add(new PropertyData<Vector2Json>("vec2", name, new Vector2Json((Vector2)(object)value), icon, flags));
 			}
 			else if (typeof(T) == typeof(Vector3))
 			{
-				this.value.Add(new PropertyData<Vector3Json>("vec3", name, new Vector3Json((Vector3)(object)value)));
+				this.value.Add(new PropertyData<Vector3Json>("vec3", name, new Vector3Json((Vector3)(object)value), icon, flags));
 			}
 			else
 			{
 				Debug.LogError("Not implemented");
 			}
-			this.flags = flags;
 		}
 
 		public PropertyGroup AddPropertyGroup(string name)
@@ -582,16 +720,16 @@ namespace FbF
 			}
 		}
 
-		public PropertyComment AddComment(string text)
+		public PropertyComment AddComment(string text, Icon? icon = null)
 		{
-			PropertyComment comment = new PropertyComment(text);
+			PropertyComment comment = new PropertyComment(text, icon);
 			this.value.Add(comment);
 			return comment;
 		}
 
-		public PropertyEntity AddEntityRef(string name, GameObject entity)
+		public PropertyEntity AddEntityRef(string name, GameObject entity, Icon? icon = null)
 		{
-			PropertyEntity entityRef = new PropertyEntity(name, entity);
+			PropertyEntity entityRef = new PropertyEntity(name, entity, icon);
 			this.value.Add(entityRef);
 			return entityRef;
 		}
@@ -603,65 +741,65 @@ namespace FbF
 			return table;
 		}
 
-		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
+		public PropertySphere AddSphere(string name, Vector3 position, float radius, Color color, string layer, Icon? icon = null, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertySphere sphere = new PropertySphere(name, position, radius, color, layer, flags);
+			PropertySphere sphere = new PropertySphere(name, position, radius, color, layer, icon, flags);
 			this.value.Add(sphere);
 			return sphere;
 		}
 
-		public PropertyAABB AddAABB(string name, Vector3 position, Vector3 size, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
+		public PropertyAABB AddAABB(string name, Vector3 position, Vector3 size, Color color, string layer, Icon? icon = null, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyAABB aabb = new PropertyAABB(name, position, size, color, layer, flags);
+			PropertyAABB aabb = new PropertyAABB(name, position, size, color, layer, icon, flags);
 			this.value.Add(aabb);
 			return aabb;
 		}
 
-		public PropertyOOBB AddOOBB(string name, Vector3 position, Vector3 size, Vector3 up, Vector3 forward, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
+		public PropertyOOBB AddOOBB(string name, Vector3 position, Vector3 size, Vector3 up, Vector3 forward, Color color, string layer, Icon? icon = null, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyOOBB oobb = new PropertyOOBB(name, position, size, up, forward, color, layer, flags);
+			PropertyOOBB oobb = new PropertyOOBB(name, position, size, up, forward, color, layer, icon, flags);
 			this.value.Add(oobb);
 			return oobb;
 		}
 
-		public PropertyCapsule AddCapsule(string name, Vector3 position, Vector3 direction, float radius, float height, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
+		public PropertyCapsule AddCapsule(string name, Vector3 position, Vector3 direction, float radius, float height, Color color, string layer, Icon? icon = null, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyCapsule capsule = new PropertyCapsule(name, position, direction, radius, height, color, layer, flags);
+			PropertyCapsule capsule = new PropertyCapsule(name, position, direction, radius, height, color, layer, icon, flags);
 			this.value.Add(capsule);
 			return capsule;
 		}
 
-		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string texture, string layer, PropertyFlags flags = PropertyFlags.None)
+		public PropertyPlane AddPlane(string name, Vector3 position, Vector3 normal, Vector3 up, float width, float length, Color color, string texture, string layer, Icon? icon = null, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyPlane plane = new PropertyPlane(name, position, normal, up, width, length, color, texture, layer, flags);
+			PropertyPlane plane = new PropertyPlane(name, position, normal, up, width, length, color, texture, layer, icon, flags);
 			this.value.Add(plane);
 			return plane;
 		}
 
-		public PropertyLine AddLine(string name, Vector3 origin, Vector3 destination, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
+		public PropertyLine AddLine(string name, Vector3 origin, Vector3 destination, Color color, string layer, Icon? icon = null, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyLine line = new PropertyLine(name, origin, destination, color, layer, flags);
+			PropertyLine line = new PropertyLine(name, origin, destination, color, layer, icon, flags);
 			this.value.Add(line);
 			return line;
 		}
 
-		public PropertyMesh AddMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
+		public PropertyMesh AddMesh(string name, float[] vertices, int[] indices, bool wireframe, Color color, string layer, Icon? icon = null, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyMesh mesh = new PropertyMesh(name, vertices, indices, wireframe, color, layer, flags);
+			PropertyMesh mesh = new PropertyMesh(name, vertices, indices, wireframe, color, layer, icon, flags);
 			this.value.Add(mesh);
 			return mesh;
 		}
 
-		public PropertyPath AddPath(string name, Vector3[] points, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
+		public PropertyPath AddPath(string name, Vector3[] points, Color color, string layer, Icon? icon = null, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyPath path = new PropertyPath(name, points, color, layer, flags);
+			PropertyPath path = new PropertyPath(name, points, color, layer, icon, flags);
 			this.value.Add(path);
 			return path;
 		}
 
-		public PropertyTriangle AddTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer, PropertyFlags flags = PropertyFlags.None)
+		public PropertyTriangle AddTriangle(string name, Vector3 p1, Vector3 p2, Vector3 p3, Color color, string layer, Icon? icon = null, PropertyFlags flags = PropertyFlags.None)
 		{
-			PropertyTriangle triangle = new PropertyTriangle(name, p1, p2, p3, color, layer, flags);
+			PropertyTriangle triangle = new PropertyTriangle(name, p1, p2, p3, color, layer, icon, flags);
 			this.value.Add(triangle);
 			return triangle;
 		}

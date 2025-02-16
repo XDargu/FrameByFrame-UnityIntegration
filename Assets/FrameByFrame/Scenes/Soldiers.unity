@@ -2032,6 +2032,11 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.y
       value: -0.0003155816
       objectReference: {fileID: 0}
+    - target: {fileID: 9187517834939599574, guid: 10cdf0d697e30bb47bd35156c5436820,
+        type: 3}
+      propertyPath: MergeChildrenRecordings
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9187517834939599575, guid: 10cdf0d697e30bb47bd35156c5436820,
         type: 3}
       propertyPath: ShootingRange
@@ -2560,6 +2565,11 @@ PrefabInstance:
         type: 3}
       propertyPath: DetectionRange
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4986804701671256679, guid: 121d80ca54bcaf047813a6b9f566e94e,
+        type: 3}
+      propertyPath: MergeChildrenRecordings
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4986804701671290025, guid: 121d80ca54bcaf047813a6b9f566e94e,
         type: 3}
@@ -6366,6 +6376,11 @@ PrefabInstance:
       propertyPath: m_ConnectedAnchor.z
       value: -0.2723095
       objectReference: {fileID: 0}
+    - target: {fileID: 9187517834939599574, guid: 10cdf0d697e30bb47bd35156c5436820,
+        type: 3}
+      propertyPath: MergeChildrenRecordings
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9187517834939599575, guid: 10cdf0d697e30bb47bd35156c5436820,
         type: 3}
       propertyPath: ShootingRange
@@ -6594,6 +6609,11 @@ PrefabInstance:
         type: 3}
       propertyPath: DetectionRange
       value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 4986804701671256679, guid: 121d80ca54bcaf047813a6b9f566e94e,
+        type: 3}
+      propertyPath: MergeChildrenRecordings
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4986804701671290025, guid: 121d80ca54bcaf047813a6b9f566e94e,
         type: 3}
@@ -7003,6 +7023,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9187517834939599574, guid: 10cdf0d697e30bb47bd35156c5436820,
+        type: 3}
+      propertyPath: MergeChildrenRecordings
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9187517834939599575, guid: 10cdf0d697e30bb47bd35156c5436820,
         type: 3}

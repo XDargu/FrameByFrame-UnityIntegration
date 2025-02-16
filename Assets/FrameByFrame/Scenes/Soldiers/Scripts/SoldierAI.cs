@@ -197,8 +197,8 @@ class Shooting : State
     {
         PropertyGroup group = entity.AddPropertyGroup("State Machine");
         group.AddLine("", fsm.soldier.transform.position + Vector3.up, target.transform.position + Vector3.up, Color.red, "AI");
-        group.AddEntityRef("Current Target", target.gameObject);
-        group.AddProperty("Time until shooting", timeUntilShoot);
+        group.AddEntityRef("Current Target", target.gameObject, new Icon("dot-circle"));
+        group.AddProperty("Time until shooting", timeUntilShoot, new Icon("clock"));
     }
 
     public override void OnStart(StateMachine fsm) { fsm.soldier.agent.isStopped = true; }
