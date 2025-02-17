@@ -710,7 +710,7 @@ namespace FbF
 			}
 		}
 
-		public PropertyGroup AddPropertyGroup(string name, Icon? icon = null)
+		public PropertyGroup AddGroup(string name, Icon? icon = null)
 		{
 			IPropertyData existingGroup = this.value.FindLast((property) => { return property.name == name && property.type == "group"; });
 			if (existingGroup != null)
@@ -866,9 +866,9 @@ namespace FbF
 			return addedEvent;
 		}
 
-		public PropertyGroup AddPropertyGroup(string name, Icon? icon = null)
+		public PropertyGroup AddGroup(string name, Icon? icon = null)
 		{
-			return properties[0].AddPropertyGroup(name, icon);
+			return properties[0].AddGroup(name, icon);
 		}
 
 		public void AddSpecialProperty<T>(string name, T value)

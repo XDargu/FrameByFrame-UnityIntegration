@@ -94,7 +94,7 @@ public class RecordPhysics : MonoBehaviour
 
 			if (RecordCollider && sphereCollider)
 			{
-				PropertyGroup group = entity.AddPropertyGroup("Colliders");
+				PropertyGroup group = entity.AddGroup("Colliders");
 				float maxScale = Mathf.Max(Mathf.Max(gameObject.transform.lossyScale.x, gameObject.transform.lossyScale.y), gameObject.transform.lossyScale.z);
 				group.AddSphere("SphereCollider", gameObject.transform.TransformPoint(sphereCollider.center), sphereCollider.radius * maxScale, color, "Colliders", null, PropertyFlags.Collapsed);
 			}
@@ -105,7 +105,7 @@ public class RecordPhysics : MonoBehaviour
 				size.x *= boxCollider.size.x;
 				size.y *= boxCollider.size.y;
 				size.z *= boxCollider.size.z;
-				PropertyGroup group = entity.AddPropertyGroup("Colliders");
+				PropertyGroup group = entity.AddGroup("Colliders");
 
 				group.AddOOBB("BoxCollider", boxCollider.bounds.center, size, gameObject.transform.up, gameObject.transform.forward, color, "Colliders", null, PropertyFlags.Collapsed);
 			}
@@ -114,7 +114,7 @@ public class RecordPhysics : MonoBehaviour
 			{
 				Vector3 size = gameObject.transform.lossyScale;
 				// TODO: Direction and correct size
-				PropertyGroup group = entity.AddPropertyGroup("Colliders");
+				PropertyGroup group = entity.AddGroup("Colliders");
 				Vector3 capsuleRef = gameObject.transform.up;
 				if (capsuleCollider.direction == 0)
 					capsuleRef = gameObject.transform.right;
@@ -133,7 +133,7 @@ public class RecordPhysics : MonoBehaviour
 
 			if (RecordVelocity && rigidBody)
 			{
-				PropertyGroup group = entity.AddPropertyGroup("RigidBody");
+				PropertyGroup group = entity.AddGroup("RigidBody");
 				group.AddLine("Velocity", gameObject.transform.position, gameObject.transform.position + rigidBody.velocity, Color.blue, "Physics", null, PropertyFlags.Collapsed);
 			}
 		}

@@ -41,7 +41,7 @@ class StateMachine
         if (FbFManager.IsRecordingOptionEnabled("AI"))
         {
             EntityData entity = FbFManager.RecordEntity(soldier.gameObject);
-            PropertyGroup group = entity.AddPropertyGroup("State Machine");
+            PropertyGroup group = entity.AddGroup("State Machine");
             group.AddProperty("Current State", currentState.ToString());
 
             currentState.UpdateDebug(this, entity);
@@ -148,7 +148,7 @@ class Chasing : State
 
     public override void UpdateDebug(StateMachine fsm, EntityData entity)
     {
-        PropertyGroup group = entity.AddPropertyGroup("State Machine");
+        PropertyGroup group = entity.AddGroup("State Machine");
         group.AddLine("", fsm.soldier.transform.position + Vector3.up, target.transform.position + Vector3.up, Color.yellow, "AI");
         group.AddEntityRef("Current Target", target.gameObject);
     }
@@ -201,7 +201,7 @@ class Shooting : State
 
     public override void UpdateDebug(StateMachine fsm, EntityData entity)
     {
-        PropertyGroup group = entity.AddPropertyGroup("State Machine");
+        PropertyGroup group = entity.AddGroup("State Machine");
         group.AddLine("", fsm.soldier.transform.position + Vector3.up, target.transform.position + Vector3.up, Color.red, "AI");
         group.AddEntityRef("Current Target", target.gameObject, new Icon("dot-circle"));
         group.AddProperty("Time until shooting", timeUntilShoot, new Icon("clock"));

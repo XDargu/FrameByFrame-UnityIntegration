@@ -29,13 +29,13 @@ public class RecordAnimations : MonoBehaviour
             animations.AddProperty("Speed", animator.speed, new Icon("tachometer-alt"));
             animations.AddProperty("Has Root Motion", animator.hasRootMotion, new Icon("map-marker"));
 
-            PropertyGroup layers = animations.AddPropertyGroup("Layers", new Icon("layer-group"));
+            PropertyGroup layers = animations.AddGroup("Layers", new Icon("layer-group"));
 
             for (int i=0; i<animator.layerCount; ++i)
             {
                 AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(i);
 
-                PropertyGroup layer = layers.AddPropertyGroup(animator.GetLayerName(i), new Icon("layer-group"));
+                PropertyGroup layer = layers.AddGroup(animator.GetLayerName(i), new Icon("layer-group"));
                 layer.AddProperty("Weight", animator.GetLayerWeight(i), new Icon("weight-hanging"));
                 layer.AddProperty("Loop", stateInfo.loop, new Icon("undo"));
                 layer.AddProperty("Speed", stateInfo.speed, new Icon("tachometer-alt"));
@@ -47,7 +47,7 @@ public class RecordAnimations : MonoBehaviour
 
                 for (int j = 0; j < clipInfo.Length; ++j)
                 {
-                    PropertyGroup clip = layer.AddPropertyGroup(clipInfo[j].clip.name, new Icon("walking"));
+                    PropertyGroup clip = layer.AddGroup(clipInfo[j].clip.name, new Icon("walking"));
                     clip.AddProperty("Weight", clipInfo[j].weight, new Icon("weight-hanging"));
                     clip.AddProperty("Length", clipInfo[j].clip.length, new Icon("history"));
                     clip.AddProperty("Time", clipInfo[j].clip.length * normTime, new Icon("clock"));
@@ -55,7 +55,7 @@ public class RecordAnimations : MonoBehaviour
                 }
             }
 
-            PropertyGroup parameters = animations.AddPropertyGroup("Parameters", new Icon("sliders-h"));
+            PropertyGroup parameters = animations.AddGroup("Parameters", new Icon("sliders-h"));
 
             foreach (AnimatorControllerParameter param in animator.parameters)
             {

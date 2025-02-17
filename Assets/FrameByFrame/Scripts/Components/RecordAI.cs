@@ -31,7 +31,7 @@ public class RecordAI : MonoBehaviour
             if (FbFManager.IsRecordingOptionEnabled("Navigation"))
             {
                 EntityData entity = FbFManager.RecordEntity(this.gameObject);
-                PropertyGroup group = entity.AddPropertyGroup("NavMeshAgent");
+                PropertyGroup group = entity.AddGroup("NavMeshAgent");
                 NavMeshPath path = agent.path;
 
                 group.AddProperty("Enabled", agent.enabled, agent.enabled ? new Icon("check-circle", "green") : new Icon("times-circle", "red"));

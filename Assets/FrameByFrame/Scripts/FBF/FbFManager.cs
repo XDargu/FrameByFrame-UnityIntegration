@@ -63,7 +63,7 @@ namespace FbF
 		public static PropertyGroup RecordProperties(GameObject entity, string group)
         {
 			EntityData entitydata = recorder.RecordEntity(entity);
-			return entitydata.AddPropertyGroup(group);
+			return entitydata.AddGroup(group);
 			
 		}
 

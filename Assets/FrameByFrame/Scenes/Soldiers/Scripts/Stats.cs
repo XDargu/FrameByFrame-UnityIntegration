@@ -84,7 +84,7 @@ public class Stats : MonoBehaviour
         if (FbFManager.IsRecordingOptionEnabled("Stats"))
         {
             EntityData entity = FbFManager.RecordEntity(this.gameObject);
-            PropertyGroup group = entity.AddPropertyGroup("Stats");
+            PropertyGroup group = entity.AddGroup("Stats");
             group.AddProperty("Health", Health, new Icon("heart"));
         }
     }
