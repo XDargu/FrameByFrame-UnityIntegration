@@ -28,10 +28,10 @@ public class Explosion : MonoBehaviour
     {
         if (FbFManager.IsRecordingOptionEnabled("Explosions"))
         {
-            PropertyGroup deathEvent = FbFManager.RecordEvent(this.gameObject, "Explosion", "Explosions");
-            deathEvent.AddProperty("Origin", explosionPos);
-            deathEvent.AddProperty("Radius", Radius);
-            deathEvent.AddSphere("", explosionPos, Radius, new Color(1.0f, 1.0f, 0.0f, 0.2f), "Explosions");
+            PropertyGroup explosionEvent = FbFManager.RecordEvent(this.gameObject, "Explosion", "Explosions");
+            explosionEvent.AddProperty("Origin", explosionPos);
+            explosionEvent.AddProperty("Radius", Radius);
+            explosionEvent.AddSphere("Explosion", explosionPos, Radius, new Color(1.0f, 1.0f, 0.0f, 0.2f), "Explosions", null, PropertyFlags.Hidden);
         }
     }
 
