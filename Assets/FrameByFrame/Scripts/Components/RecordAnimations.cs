@@ -54,6 +54,31 @@ public class RecordAnimations : MonoBehaviour
 
                 }
             }
+
+            PropertyGroup parameters = animations.AddPropertyGroup("Parameters", new Icon("sliders-h"));
+
+            foreach (AnimatorControllerParameter param in animator.parameters)
+            {
+                switch (param.type)
+                {
+                    case AnimatorControllerParameterType.Int:
+                        parameters.AddProperty(param.name, animator.GetInteger(param.name));
+                        break;
+                    case AnimatorControllerParameterType.Float:
+                        parameters.AddProperty(param.name, animator.GetFloat(param.name));
+                        break;
+                    case AnimatorControllerParameterType.Bool:
+                        parameters.AddProperty(param.name, animator.GetBool(param.name));
+                        break;
+                    case AnimatorControllerParameterType.Trigger:
+                        parameters.AddProperty(param.name, "Trigger (no value)");
+                        break;
+                    default:
+                        parameters.AddProperty(param.name, "Unknown");
+                        break;
+                }
+
+            }
         }
     }
 }
