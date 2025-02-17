@@ -269,6 +269,7 @@ public class SoldierAI : MonoBehaviour
 
         if (!GetComponent<Stats>().IsAlive())
         {
+            Debug.Log("Soldier " + gameObject.name + " dies!");
             Destroy(this);
             GetComponent<Animator>().enabled = false;
             GetComponent<NavMeshAgent>().enabled = false;
