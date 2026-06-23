@@ -17,7 +17,8 @@ public class Weapon : MonoBehaviour
 
     public void Shoot(GameObject target, Vector3 origin, Vector3 destination)
     {
-        target.GetComponent<Stats>().ApplyDamage(falloff, origin, destination, gameObject);
+        Stats targetStats = target.GetComponent<Stats>();
+        targetStats.ApplyDamage(falloff, origin, destination, gameObject);
 
         ParticleSystem projectile = GameObject.Instantiate(projectileEffect);
         projectile.transform.position = origin;

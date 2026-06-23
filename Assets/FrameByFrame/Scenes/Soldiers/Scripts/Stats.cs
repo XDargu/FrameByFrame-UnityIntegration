@@ -7,6 +7,10 @@ using Utils;
 public class Stats : MonoBehaviour
 {
     public int Health = 100;
+    public int Kills = 0;
+    public int Deads = 0;
+
+    GameObject lastInstigator;
 
     // Start is called before the first frame update
     void Start()
@@ -26,21 +30,25 @@ public class Stats : MonoBehaviour
         int amount = falloff.CalculateDamage(distance);
 
         RecordDamage(falloff, origin, destination, instigator, amount);
-        DealDamage(amount);
+        DealDamage(amount, instigator);
     }
 
     public void ApplyDamage(int amount, GameObject instigator)
     {
         RecordDamage(instigator, amount);
-        DealDamage(amount);
+        DealDamage(amount, instigator);
     }
 
-    void DealDamage(int amount)
+    void DealDamage(int amount, GameObject instigator)
     {
+        lastInstigator = instigator;
+
+        // This is introducing a bug for demo purposes
+        // We can kill the entity several times
         Health -= amount;
         if (Health <= 0)
         {
-            Kill();
+            Kill(instigator);
         }
     }
 
@@ -49,9 +57,19 @@ public class Stats : MonoBehaviour
         return Health > 0;
     }
 
-    public void Kill()
+    public void Kill(GameObject instigator)
     {
+        // Since we can be killed multiple times (incorrectly), kills and deads can be wrong!
+        Stats selfStats = instigator.GetComponent<Stats>();
+        selfStats.Kills++;
+
+        Deads++;
         RecordDeath();
+    }
+
+    public GameObject GetLastInstigator()
+    {
+        return lastInstigator;
     }
 
     [System.Diagnostics.Conditional("DEBUG")]
@@ -86,6 +104,9 @@ public class Stats : MonoBehaviour
             EntityData entity = FbFManager.RecordEntity(this.gameObject);
             PropertyGroup group = entity.AddGroup("Stats");
             group.AddProperty("Health", Health, new Icon("heart"));
+            group.AddProperty("Kills", Kills, new Icon("bullseye"));
+            group.AddProperty("Deads", Deads, new Icon("skull"));
+            group.AddProperty("K/D Ratio", (float)Kills / (float)Deads);
         }
     }
 

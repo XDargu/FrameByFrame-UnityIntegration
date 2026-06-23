@@ -46,11 +46,15 @@ public class Explosion : MonoBehaviour
 
         Stats[] statObjects = GameObject.FindObjectsOfType<Stats>();
 
+        Stats selfStats = GetComponent<Stats>();
+
         foreach (Stats statObj in statObjects)
         {
             float distanceToObject = Vector3.Distance(statObj.transform.position, transform.position);
             if (distanceToObject < Radius)
             {
+                // Instigator is not correctly propagated here. Another bug we introduced on purpose!
+                GameObject lastInstigator = selfStats.GetLastInstigator();
                 statObj.ApplyDamage(falloff.CalculateDamage(distanceToObject), gameObject);
             }
         }
