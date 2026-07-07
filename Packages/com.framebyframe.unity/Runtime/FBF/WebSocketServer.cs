@@ -27,6 +27,19 @@ namespace FbF
 			get { return !m_bShutDown && m_tcpListener != null; }
 		}
 
+		public int ClientCount
+		{
+			get
+			{
+				lock (m_clientsLock)
+				{
+					return m_tcpClients.Count;
+				}
+			}
+		}
+
+		public string LastError { get; private set; }
+
 		public WebSocketServer(IPAddress ipAdress, int port)
 		{
 			m_networkWebSockets = new List<INetworkWebSocket>();
@@ -81,6 +94,7 @@ namespace FbF
 				{
 					if (!m_bShutDown)
 					{
+						LastError = "Listener stopped unexpectedly";
 						FbFManager.print("Frame by Frame websocket listener stopped unexpectedly");
 					}
 				}
@@ -92,6 +106,7 @@ namespace FbF
 				{
 					if (!m_bShutDown)
 					{
+						LastError = "Handshake failed";
 						FbFManager.print("Frame by Frame websocket handshake failed");
 					}
 				}

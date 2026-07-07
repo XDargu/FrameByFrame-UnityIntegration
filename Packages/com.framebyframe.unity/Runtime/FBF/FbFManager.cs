@@ -18,6 +18,12 @@ namespace FbF
 		private static readonly Dictionary<string, bool> m_recordingOptions = new Dictionary<string, bool>();
 		private static bool m_isInitialized;
 		private static bool m_isInitializing;
+		private static string m_lastError;
+
+		public static string LastError
+		{
+			get { return m_lastError; }
+		}
 
 		static FbFManager _singleton;
 		public static FbFManager singleton
@@ -34,7 +40,6 @@ namespace FbF
 
 		static FbFManager()
 		{
-			EnsureInitialized();
 		}
 
 		public static void InitializeForEditor()
@@ -77,6 +82,18 @@ namespace FbF
 
 		public static void StartServer()
 		{
+			bool shouldInitialize;
+			lock (m_stateLock)
+			{
+				shouldInitialize = !m_isInitialized && !m_isInitializing;
+			}
+
+			if (shouldInitialize)
+			{
+				EnsureInitialized();
+				return;
+			}
+
 			lock (m_stateLock)
 			{
 				StartServerLocked();
@@ -99,11 +116,13 @@ namespace FbF
 			{
 				server = new WebSocketServer(IPAddress.Any, Config.port);
 				recorder.Init(server);
+				m_lastError = string.Empty;
 			}
 			catch (SocketException exception)
 			{
 				server = null;
-				Debug.LogWarning("Frame by Frame could not start the websocket server on port " + Config.port + ": " + exception.Message);
+				m_lastError = "Could not start websocket server on port " + Config.port + ": " + exception.Message;
+				Debug.LogWarning("Frame by Frame " + m_lastError);
 			}
 		}
 
@@ -119,6 +138,10 @@ namespace FbF
 			{
 				Debug.Log("Persisting FBF recording options");
 				PersistRecordingOptions();
+				if (!Config.keepConnectionAliveAcrossPlayMode)
+				{
+					StopServer();
+				}
 			}
 
 			if (state == PlayModeStateChange.EnteredEditMode || state == PlayModeStateChange.EnteredPlayMode)

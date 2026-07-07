@@ -8,6 +8,8 @@ namespace FbF
 	{
 		public static string version = "0.0.0";
 		public static string rawRecordingDefaultPath = "rawRecording";
+		public static bool autoStartInEditor = true;
+		public static bool keepConnectionAliveAcrossPlayMode = true;
 		public static int port = 23001;
 		public static int portQuery = 23000;
 		public static int readInterval = 100;
@@ -17,5 +19,5 @@ namespace FbF
 		public static int clientTimeOut = 15000;
 		public static string protocol = "frameByframe";
 		public static int ExecutionTimeout = 10000;
-    }
+	}
 }
