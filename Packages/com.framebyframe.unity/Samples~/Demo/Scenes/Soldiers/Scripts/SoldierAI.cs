@@ -235,6 +235,7 @@ class Shooting : State
 
 }
 
+[FrameByFrameRecordingOption("AI", "Records state machine state and AI target information in the soldiers demo.")]
 public class SoldierAI : MonoBehaviour
 {
     // Simple state machine
@@ -251,11 +252,8 @@ public class SoldierAI : MonoBehaviour
     public float DetectionRange = 15.0f;
     public float ShootingRange = 10.0f;
 
-    // Start is called before the first frame update
     void Start()
     {
-        FbFManager.RegisterRecordingOption("AI");
-
         agent = gameObject.GetComponent<NavMeshAgent>();
         initialPos = gameObject.transform.position;
 

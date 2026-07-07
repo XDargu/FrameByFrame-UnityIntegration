@@ -10,6 +10,8 @@ namespace FbF
 		public static string rawRecordingDefaultPath = "rawRecording";
 		public static bool autoStartInEditor = true;
 		public static bool keepConnectionAliveAcrossPlayMode = true;
+		public static bool enableInBuilds = true;
+		public static bool developmentBuildsOnly = true;
 		public static int port = 23001;
 		public static int portQuery = 23000;
 		public static int readInterval = 100;

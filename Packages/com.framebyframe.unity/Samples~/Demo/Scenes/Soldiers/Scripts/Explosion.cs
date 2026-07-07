@@ -4,18 +4,13 @@ using UnityEngine;
 using FbF;
 using Utils;
 
+[FrameByFrameRecordingOption("Explosions", "Records explosion events, radius, and debug spheres in the soldiers demo.")]
 public class Explosion : MonoBehaviour
 {
     public ParticleSystem explosionParticles;
     public float Radius = 5.0f;
     public float Force = 2000.0f;
     public DamageFallOff falloff;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        FbFManager.RegisterRecordingOption("Explosions");
-    }
 
     // Update is called once per frame
     void Update()

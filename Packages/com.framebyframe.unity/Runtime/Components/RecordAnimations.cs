@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using FbF;
 
+[FbFRecordingOption(FbFBuiltInRecordingOptions.Animations, "Records Animator state, layers, clips, and parameters.")]
 public class RecordAnimations : MonoBehaviour
 {
     private Animator animator;
 
     void Start()
     {
-        FbFManager.RegisterRecordingOption("Animations");
         animator = GetComponent<Animator>();
     }
 
@@ -22,9 +22,9 @@ public class RecordAnimations : MonoBehaviour
     [System.Diagnostics.Conditional("DEBUG")]
     void Record()
     {
-        if (FbFManager.IsRecordingOptionEnabled("Animations"))
+        if (FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.Animations))
         {
-            PropertyGroup animations = FbFManager.RecordProperties(gameObject, "Animations");
+            PropertyGroup animations = FbFManager.RecordProperties(gameObject, FbFBuiltInRecordingOptions.Animations);
             animations.AddProperty("Enabled", animator.enabled, animator.enabled ? new Icon("check-circle", "green") : new Icon("times-circle", "red"));
             animations.AddProperty("Speed", animator.speed, new Icon("tachometer-alt"));
             animations.AddProperty("Has Root Motion", animator.hasRootMotion, new Icon("map-marker"));

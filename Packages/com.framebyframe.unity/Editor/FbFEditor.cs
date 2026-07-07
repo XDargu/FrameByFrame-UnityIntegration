@@ -16,7 +16,9 @@ namespace FbF.Editor
 				return;
 			}
 
+			FbFRecordingOptions.DiscoverOptions();
 			FrameByFrameProjectSettings.instance.ApplyToConfig();
+			FrameByFrameProjectSettings.instance.ApplyRecordingOptionsToRegistry();
 			if (FrameByFrameProjectSettings.instance.AutoStartInEditor)
 			{
 				FbFManager.InitializeForEditor();
@@ -178,19 +180,25 @@ namespace FbF.Editor
 
 			if (showRecordingOptions)
 			{
-				Dictionary<string, bool> options = FbFManager.GetRecordingOptions();
+				List<FrameByFrameRecordingOptionDefinition> options = FbFRecordingOptions.GetDefinitions();
 				if (options.Count == 0)
 				{
-					EditorGUILayout.HelpBox("No recording options have been registered yet. Options appear after recorder components initialize.", UnityEditor.MessageType.Info);
+					EditorGUILayout.HelpBox("No recording options have been discovered yet. Add components with FrameByFrameRecordingOption attributes or use the built-in recorder scripts.", UnityEditor.MessageType.Info);
 				}
 				else
 				{
-					foreach (KeyValuePair<string, bool> entry in options)
+					foreach (FrameByFrameRecordingOptionDefinition option in options)
 					{
-						bool nextValue = EditorGUILayout.Toggle(entry.Key, entry.Value);
-						if (nextValue != entry.Value)
+						bool isEnabled = FbFManager.IsRecordingOptionEnabled(option.id);
+						bool nextValue = EditorGUILayout.Toggle(option.id, isEnabled);
+						if (nextValue != isEnabled)
 						{
-							FbFManager.SetRecordingOption(entry.Key, nextValue);
+							FrameByFrameProjectSettings.instance.SetRecordingOptionDefault(option.id, nextValue);
+						}
+
+						if (!string.IsNullOrEmpty(option.description))
+						{
+							EditorGUILayout.LabelField(option.description, EditorStyles.miniLabel);
 						}
 					}
 				}

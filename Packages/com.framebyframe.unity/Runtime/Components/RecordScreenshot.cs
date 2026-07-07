@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
+[FbFRecordingOption(FbFBuiltInRecordingOptions.ShapeHelpers, "Records screen captures as textured helper planes.")]
 public class RecordScreenshot : MonoBehaviour
 {
 	public int jpgQuality = 35;
@@ -14,7 +15,6 @@ public class RecordScreenshot : MonoBehaviour
 
 	void Start()
 	{
-		FbFManager.RegisterRecordingOption("ShapeHelpers");
 		// Start the loop to run every single frame
 		StartCoroutine(RecordLoop());
 	}
@@ -36,7 +36,7 @@ public class RecordScreenshot : MonoBehaviour
 			// Yields and safely waits inside the "drawing frame" window
 			yield return waitFrame;
 
-			if (Application.isPlaying && FbFManager.IsRecordingOptionEnabled("ShapeHelpers"))
+			if (Application.isPlaying && FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.ShapeHelpers))
 			{
 				Record();
 			}
@@ -84,7 +84,7 @@ public class RecordScreenshot : MonoBehaviour
 				cachedTex.height / 1000.0f,
 				new Color(1, 1, 1, 1),
 				screenshotName,
-				"ShapeHelpers");
+				FbFBuiltInRecordingOptions.ShapeHelpers);
 		}
 		catch (Exception e)
 		{

@@ -4,14 +4,9 @@ using UnityEngine;
 using UnityEngine.AI;
 using FbF;
 
+[FbFRecordingOption(FbFBuiltInRecordingOptions.NavMesh, "Records the calculated NavMesh triangulation.")]
 public class RecordNavMesh : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        FbFManager.RegisterRecordingOption("NavMesh");
-    }
-
     // Update is called once per frame
     void Update()
     {
@@ -21,12 +16,12 @@ public class RecordNavMesh : MonoBehaviour
     [System.Diagnostics.Conditional("DEBUG")]
     void RecordData()
     {
-        if (FbFManager.IsRecordingOptionEnabled("NavMesh"))
+        if (FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.NavMesh))
         {
             NavMeshTriangulation meshData = NavMesh.CalculateTriangulation();
 
             PropertyGroup group = FbFManager.RecordProperties(this.gameObject, "Navigation");
-            group.AddMesh("NavMesh", FlattenPositions(meshData.vertices), ReverseIndices(meshData.indices), true, new Color(Color.cyan.r, Color.cyan.g, Color.cyan.b, 0.5f), "NavMesh");
+            group.AddMesh("NavMesh", FlattenPositions(meshData.vertices), ReverseIndices(meshData.indices), true, new Color(Color.cyan.r, Color.cyan.g, Color.cyan.b, 0.5f), FbFBuiltInRecordingOptions.NavMesh);
         }
     }
 

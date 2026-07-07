@@ -5,6 +5,7 @@ using FbF;
 using System.IO;
 using System;
 
+[FbFRecordingOption(FbFBuiltInRecordingOptions.ShapeHelpers, "Records helper shapes such as planes and screenshots.")]
 public class RecordPlane : MonoBehaviour {
 
 	public float width = 1.0f;
@@ -13,20 +14,15 @@ public class RecordPlane : MonoBehaviour {
     [Range(0.0f, 1.0f)]
     public float opacity = 1.0f;
 
-	// Use this for initialization
-	void Start () {
-		FbFManager.RegisterRecordingOption("ShapeHelpers");
-	}
-	
 	// Update is called once per frame
 	void Update () {
 
-		if (FbFManager.IsRecordingOptionEnabled("ShapeHelpers"))
+		if (FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.ShapeHelpers))
 		{
-			PropertyGroup entity = FbFManager.RecordProperties(this.gameObject, "ShapeHelpers");
+			PropertyGroup entity = FbFManager.RecordProperties(this.gameObject, FbFBuiltInRecordingOptions.ShapeHelpers);
 
 			float maxScale = Mathf.Max(Mathf.Max(gameObject.transform.lossyScale.x, gameObject.transform.lossyScale.y), gameObject.transform.lossyScale.z);
-			entity.AddPlane("Plane", gameObject.transform.position, gameObject.transform.up, gameObject.transform.forward, width, length, new Color(1, 0.5f, 0.5f, opacity), "", "ShapeHelpers");
+			entity.AddPlane("Plane", gameObject.transform.position, gameObject.transform.up, gameObject.transform.forward, width, length, new Color(1, 0.5f, 0.5f, opacity), "", FbFBuiltInRecordingOptions.ShapeHelpers);
 		}
 	}
 }

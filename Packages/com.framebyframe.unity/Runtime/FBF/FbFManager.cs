@@ -15,7 +15,6 @@ namespace FbF
 		public static WebSocketServer server;
 
 		private static readonly object m_stateLock = new object();
-		private static readonly Dictionary<string, bool> m_recordingOptions = new Dictionary<string, bool>();
 		private static bool m_isInitialized;
 		private static bool m_isInitializing;
 		private static string m_lastError;
@@ -42,6 +41,30 @@ namespace FbF
 		{
 		}
 
+#if !UNITY_EDITOR
+		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+		private static void InitializeForPlayerBuild()
+		{
+			FrameByFrameRuntimeSettings runtimeSettings = FrameByFrameRuntimeSettings.Load();
+			if (runtimeSettings != null)
+			{
+				runtimeSettings.Apply();
+			}
+
+			if (!Config.enableInBuilds)
+			{
+				return;
+			}
+
+			if (Config.developmentBuildsOnly && !Debug.isDebugBuild)
+			{
+				return;
+			}
+
+			EnsureInitialized();
+		}
+#endif
+
 		public static void InitializeForEditor()
 		{
 			EnsureInitialized();
@@ -60,6 +83,7 @@ namespace FbF
 				try
 				{
 					recorder = new RecorderNetworkWebSocket();
+					FbFRecordingOptions.DiscoverOptions();
 					StartServerLocked();
 
 #if UNITY_EDITOR
@@ -152,13 +176,7 @@ namespace FbF
 
 		private static void PersistRecordingOptions()
 		{
-			lock (m_stateLock)
-			{
-				foreach (KeyValuePair<string, bool> entry in m_recordingOptions)
-				{
-					EditorPrefs.SetBool(entry.Key, entry.Value);
-				}
-			}
+			FbFRecordingOptions.Persist();
 		}
 #endif
 
@@ -191,61 +209,36 @@ namespace FbF
 
 		public static bool IsRecordingOptionEnabled(string option)
 		{
-			lock (m_stateLock)
-			{
-				bool isEnabled;
-				return m_recordingOptions.TryGetValue(option, out isEnabled) && isEnabled;
-			}
+			return FbFRecordingOptions.IsEnabled(option);
 		}
 
 		public static void RegisterRecordingOption(string option)
 		{
-			lock (m_stateLock)
-			{
-				if (m_recordingOptions.ContainsKey(option))
-				{
-					return;
-				}
+			FbFRecordingOptions.Register(option, string.Empty);
+		}
 
-				bool value = false;
-#if UNITY_EDITOR
-				if (EditorPrefs.HasKey(option))
-				{
-					value = EditorPrefs.GetBool(option);
-				}
-#endif
-				m_recordingOptions[option] = value;
-			}
+		public static void RegisterRecordingOption(string option, string description)
+		{
+			FbFRecordingOptions.Register(option, description);
 		}
 
 		public static void SetRecordingOption(string option, bool isEnabled)
 		{
-			lock (m_stateLock)
-			{
-				m_recordingOptions[option] = isEnabled;
-			}
+			FbFRecordingOptions.SetEnabled(option, isEnabled);
 		}
 
 		public static void FillRecordingOptions(List<RecordingOption> target)
 		{
-			lock (m_stateLock)
+			List<RecordingOption> options = FbFRecordingOptions.GetRecordingOptions();
+			foreach (RecordingOption option in options)
 			{
-				foreach (KeyValuePair<string, bool> entry in m_recordingOptions)
-				{
-					RecordingOption option = new RecordingOption();
-					option.name = entry.Key;
-					option.enabled = entry.Value;
-					target.Add(option);
-				}
+				target.Add(option);
 			}
 		}
 
 		public static Dictionary<string, bool> GetRecordingOptions()
 		{
-			lock (m_stateLock)
-			{
-				return new Dictionary<string, bool>(m_recordingOptions);
-			}
+			return FbFRecordingOptions.GetStates();
 		}
 
 		public static void print(string text)

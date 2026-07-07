@@ -929,6 +929,8 @@ namespace FbF
 		[DataMember]
 		public string name;
 		[DataMember]
+		public string description;
+		[DataMember]
 		public bool enabled;
 	}
 

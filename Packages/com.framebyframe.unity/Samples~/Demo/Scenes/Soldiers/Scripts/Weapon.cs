@@ -4,16 +4,11 @@ using UnityEngine;
 using Utils;
 using FbF;
 
+[FrameByFrameRecordingOption("Weapons", "Records weapon-related gameplay events in the soldiers demo.")]
 public class Weapon : MonoBehaviour
 {
     public ParticleSystem projectileEffect;
     public DamageFallOff falloff;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        FbFManager.RegisterRecordingOption("Weapons");
-    }
 
     public void Shoot(GameObject target, Vector3 origin, Vector3 destination)
     {

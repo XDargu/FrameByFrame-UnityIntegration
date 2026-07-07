@@ -2,13 +2,12 @@ using UnityEngine;
 using UnityEngine.AI;
 using FbF;
 
+[FrameByFrameRecordingOption(FrameByFrameBuiltInRecordingOptions.Navigation, "Records click-to-move destination changes in the demo scene.")]
 public class MoveToClickPoint : MonoBehaviour
 {
     NavMeshAgent agent;
     void Start()
     {
-        FbFManager.RegisterRecordingOption("Navigation");
-
         agent = GetComponent<NavMeshAgent>();
     }
 
@@ -28,7 +27,7 @@ public class MoveToClickPoint : MonoBehaviour
     [System.Diagnostics.Conditional("DEBUG")]
     private void RecordDestChanged(Vector3 position)
     {
-        if (FbFManager.IsRecordingOptionEnabled("Navigation"))
+        if (FbFManager.IsRecordingOptionEnabled(FrameByFrameBuiltInRecordingOptions.Navigation))
         {
             PropertyGroup eventPath = FbFManager.RecordEvent(this.gameObject, "Destination changed", "Navigation");
             eventPath.AddSphere("Destination", position, 0.2f, Color.yellow, "Pathfinding");

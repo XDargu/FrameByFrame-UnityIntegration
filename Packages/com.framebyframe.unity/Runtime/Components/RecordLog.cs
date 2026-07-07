@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FbF;
 
+[FbFRecordingOption(FbFBuiltInRecordingOptions.Log, "Records Unity log messages and error events.")]
 public class RecordLog : MonoBehaviour
 {
     struct LogMsg
@@ -23,11 +24,6 @@ public class RecordLog : MonoBehaviour
 
     public bool logErrorsAsEvents = false;
 
-    void Start()
-    {
-        FbFManager.RegisterRecordingOption("Log");
-    }
-
     void OnEnable()
     {
         Application.logMessageReceived += HandleLog;
@@ -40,9 +36,9 @@ public class RecordLog : MonoBehaviour
 
     private void Update()
     {
-        if (FbFManager.IsRecordingOptionEnabled("Log"))
+        if (FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.Log))
         {
-            PropertyGroup log = FbFManager.RecordProperties(gameObject, "Log");
+            PropertyGroup log = FbFManager.RecordProperties(gameObject, FbFBuiltInRecordingOptions.Log);
             PropertyTable messages = log.AddTable("Messages", "Time", "Type", "Message");
 
             foreach (LogMsg logMsg in logHistory)
@@ -51,7 +47,7 @@ public class RecordLog : MonoBehaviour
 
                 if (logMsg.type == LogType.Error || logMsg.type == LogType.Exception || logMsg.type == LogType.Assert)
                 {
-                    PropertyGroup logEvent = FbFManager.RecordEvent(gameObject, "Log " + logMsg.type.ToString(), "Log");
+                    PropertyGroup logEvent = FbFManager.RecordEvent(gameObject, "Log " + logMsg.type.ToString(), FbFBuiltInRecordingOptions.Log);
                     logEvent.AddComment(logMsg.logString, GetIconType(logMsg.type));
                     logEvent.AddProperty("Stack Trace", logMsg.stackTrace);
                 }
@@ -63,7 +59,7 @@ public class RecordLog : MonoBehaviour
 
     void HandleLog(string logString, string stackTrace, LogType type)
     {
-        if (FbFManager.IsRecordingOptionEnabled("Log"))
+        if (FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.Log))
         {
             logHistory.Add(new LogMsg(logString, stackTrace, type));
         }

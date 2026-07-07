@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Utils;
 
+[FrameByFrameRecordingOption("Stats", "Records health, kills, deaths, damage, and death events in the soldiers demo.")]
 public class Stats : MonoBehaviour
 {
     public int Health = 100;
@@ -11,12 +12,6 @@ public class Stats : MonoBehaviour
     public int Deads = 0;
 
     GameObject lastInstigator;
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        FbFManager.RegisterRecordingOption("Stats");
-    }
 
     // Update is called once per frame
     void Update()
