@@ -1,6 +1,6 @@
 namespace FbF
 {
-	public static class FbFBuiltInRecordingOptions
+	public static class FrameByFrameBuiltInRecordingOptions
 	{
 		public const string Animations = "Animations";
 		public const string Colliders = "Colliders";

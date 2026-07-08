@@ -60,10 +60,10 @@ namespace FbF
 						continue;
 					}
 
-					object[] attributes = type.GetCustomAttributes(typeof(FbFRecordingOptionAttribute), true);
+					object[] attributes = type.GetCustomAttributes(typeof(FrameByFrameRecordingOptionAttribute), true);
 					foreach (object attribute in attributes)
 					{
-						FbFRecordingOptionAttribute recordingOption = attribute as FbFRecordingOptionAttribute;
+						FrameByFrameRecordingOptionAttribute recordingOption = attribute as FrameByFrameRecordingOptionAttribute;
 						if (recordingOption != null)
 						{
 							Register(recordingOption.Id, recordingOption.Description);

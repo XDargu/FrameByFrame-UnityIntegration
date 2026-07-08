@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "com.framebyframe.unity": {
-      "version": "file:com.framebyframe.unity",
+    "com.framebyframetool.integration": {
+      "version": "file:com.framebyframetool.integration",
       "depth": 0,
       "source": "embedded",
       "dependencies": {

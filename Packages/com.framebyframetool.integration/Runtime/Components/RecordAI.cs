@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using FbF;
 
-[FbFRecordingOption(FbFBuiltInRecordingOptions.Navigation, "Records NavMeshAgent state and path corners.")]
+[FrameByFrameRecordingOption(FrameByFrameBuiltInRecordingOptions.Navigation, "Records NavMeshAgent state and path corners.")]
 public class RecordAI : MonoBehaviour
 {
     public bool RecordPath = true;
@@ -28,7 +28,7 @@ public class RecordAI : MonoBehaviour
     {
         if (RecordPath)
         {
-            if (FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.Navigation))
+            if (FbFManager.IsRecordingOptionEnabled(FrameByFrameBuiltInRecordingOptions.Navigation))
             {
                 EntityData entity = FbFManager.RecordEntity(this.gameObject);
                 PropertyGroup group = entity.AddGroup("NavMeshAgent");

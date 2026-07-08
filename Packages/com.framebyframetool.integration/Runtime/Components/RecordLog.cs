@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using FbF;
 
-[FbFRecordingOption(FbFBuiltInRecordingOptions.Log, "Records Unity log messages and error events.")]
+[FrameByFrameRecordingOption(FrameByFrameBuiltInRecordingOptions.Log, "Records Unity log messages and error events.")]
 public class RecordLog : MonoBehaviour
 {
     struct LogMsg
@@ -36,9 +36,9 @@ public class RecordLog : MonoBehaviour
 
     private void Update()
     {
-        if (FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.Log))
+        if (FbFManager.IsRecordingOptionEnabled(FrameByFrameBuiltInRecordingOptions.Log))
         {
-            PropertyGroup log = FbFManager.RecordProperties(gameObject, FbFBuiltInRecordingOptions.Log);
+            PropertyGroup log = FbFManager.RecordProperties(gameObject, FrameByFrameBuiltInRecordingOptions.Log);
             PropertyTable messages = log.AddTable("Messages", "Time", "Type", "Message");
 
             foreach (LogMsg logMsg in logHistory)
@@ -47,7 +47,7 @@ public class RecordLog : MonoBehaviour
 
                 if (logMsg.type == LogType.Error || logMsg.type == LogType.Exception || logMsg.type == LogType.Assert)
                 {
-                    PropertyGroup logEvent = FbFManager.RecordEvent(gameObject, "Log " + logMsg.type.ToString(), FbFBuiltInRecordingOptions.Log);
+                    PropertyGroup logEvent = FbFManager.RecordEvent(gameObject, "Log " + logMsg.type.ToString(), FrameByFrameBuiltInRecordingOptions.Log);
                     logEvent.AddComment(logMsg.logString, GetIconType(logMsg.type));
                     logEvent.AddProperty("Stack Trace", logMsg.stackTrace);
                 }
@@ -59,7 +59,7 @@ public class RecordLog : MonoBehaviour
 
     void HandleLog(string logString, string stackTrace, LogType type)
     {
-        if (FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.Log))
+        if (FbFManager.IsRecordingOptionEnabled(FrameByFrameBuiltInRecordingOptions.Log))
         {
             logHistory.Add(new LogMsg(logString, stackTrace, type));
         }

@@ -1,11 +1,11 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using FbF;
 
-[FbFRecordingOption(FbFBuiltInRecordingOptions.Colliders, "Records SphereCollider, BoxCollider, and CapsuleCollider shapes.")]
-[FbFRecordingOption(FbFBuiltInRecordingOptions.Collisions, "Records collision enter events and contact points.")]
-[FbFRecordingOption(FbFBuiltInRecordingOptions.Physics, "Records physics data such as Rigidbody velocity.")]
+[FrameByFrameRecordingOption(FrameByFrameBuiltInRecordingOptions.Colliders, "Records SphereCollider, BoxCollider, and CapsuleCollider shapes.")]
+[FrameByFrameRecordingOption(FrameByFrameBuiltInRecordingOptions.Collisions, "Records collision enter events and contact points.")]
+[FrameByFrameRecordingOption(FrameByFrameBuiltInRecordingOptions.Physics, "Records physics data such as Rigidbody velocity.")]
 public class RecordPhysics : MonoBehaviour
 {
 
@@ -88,15 +88,15 @@ public class RecordPhysics : MonoBehaviour
 	[System.Diagnostics.Conditional("DEBUG")]
 	void Record()
 	{
-		if (FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.Colliders))
+		if (FbFManager.IsRecordingOptionEnabled(FrameByFrameBuiltInRecordingOptions.Colliders))
 		{
 			EntityData entity = FbFManager.RecordEntity(targetObject);
 
 			if (RecordCollider && sphereCollider)
 			{
-				PropertyGroup group = entity.AddGroup(FbFBuiltInRecordingOptions.Colliders);
+				PropertyGroup group = entity.AddGroup(FrameByFrameBuiltInRecordingOptions.Colliders);
 				float maxScale = Mathf.Max(Mathf.Max(gameObject.transform.lossyScale.x, gameObject.transform.lossyScale.y), gameObject.transform.lossyScale.z);
-				group.AddSphere("SphereCollider", gameObject.transform.TransformPoint(sphereCollider.center), sphereCollider.radius * maxScale, color, FbFBuiltInRecordingOptions.Colliders, null, PropertyFlags.Collapsed);
+				group.AddSphere("SphereCollider", gameObject.transform.TransformPoint(sphereCollider.center), sphereCollider.radius * maxScale, color, FrameByFrameBuiltInRecordingOptions.Colliders, null, PropertyFlags.Collapsed);
 			}
 
 			if (RecordCollider && boxCollider)
@@ -105,16 +105,16 @@ public class RecordPhysics : MonoBehaviour
 				size.x *= boxCollider.size.x;
 				size.y *= boxCollider.size.y;
 				size.z *= boxCollider.size.z;
-				PropertyGroup group = entity.AddGroup(FbFBuiltInRecordingOptions.Colliders);
+				PropertyGroup group = entity.AddGroup(FrameByFrameBuiltInRecordingOptions.Colliders);
 
-				group.AddOOBB("BoxCollider", boxCollider.bounds.center, size, gameObject.transform.up, gameObject.transform.forward, color, FbFBuiltInRecordingOptions.Colliders, null, PropertyFlags.Collapsed);
+				group.AddOOBB("BoxCollider", boxCollider.bounds.center, size, gameObject.transform.up, gameObject.transform.forward, color, FrameByFrameBuiltInRecordingOptions.Colliders, null, PropertyFlags.Collapsed);
 			}
 
 			if (RecordCollider && capsuleCollider)
 			{
 				Vector3 size = gameObject.transform.lossyScale;
 				// TODO: Direction and correct size
-				PropertyGroup group = entity.AddGroup(FbFBuiltInRecordingOptions.Colliders);
+				PropertyGroup group = entity.AddGroup(FrameByFrameBuiltInRecordingOptions.Colliders);
 				Vector3 capsuleRef = gameObject.transform.up;
 				if (capsuleCollider.direction == 0)
 					capsuleRef = gameObject.transform.right;
@@ -123,18 +123,18 @@ public class RecordPhysics : MonoBehaviour
 				if (capsuleCollider.direction == 2)
 					capsuleRef = gameObject.transform.forward;
 				
-				group.AddCapsule("CapsuleCollider", capsuleCollider.bounds.center, capsuleRef, capsuleCollider.radius, capsuleCollider.height, color, FbFBuiltInRecordingOptions.Colliders, null, PropertyFlags.Collapsed);
+				group.AddCapsule("CapsuleCollider", capsuleCollider.bounds.center, capsuleRef, capsuleCollider.radius, capsuleCollider.height, color, FrameByFrameBuiltInRecordingOptions.Colliders, null, PropertyFlags.Collapsed);
 			}
 		}
 
-		if (FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.Physics))
+		if (FbFManager.IsRecordingOptionEnabled(FrameByFrameBuiltInRecordingOptions.Physics))
 		{
 			EntityData entity = FbFManager.RecordEntity(targetObject);
 
 			if (RecordVelocity && rigidBody)
 			{
 				PropertyGroup group = entity.AddGroup("RigidBody");
-				group.AddLine("Velocity", gameObject.transform.position, gameObject.transform.position + rigidBody.velocity, Color.blue, FbFBuiltInRecordingOptions.Physics, null, PropertyFlags.Collapsed);
+				group.AddLine("Velocity", gameObject.transform.position, gameObject.transform.position + rigidBody.velocity, Color.blue, FrameByFrameBuiltInRecordingOptions.Physics, null, PropertyFlags.Collapsed);
 			}
 		}
 
@@ -146,7 +146,7 @@ public class RecordPhysics : MonoBehaviour
 
 	void OnCollisionEnter(Collision collision)
 	{
-		if (FbFManager.IsRecordingOptionEnabled(FbFBuiltInRecordingOptions.Collisions))
+		if (FbFManager.IsRecordingOptionEnabled(FrameByFrameBuiltInRecordingOptions.Collisions))
 		{
 			if (RecordCollider)
 			{
@@ -155,7 +155,7 @@ public class RecordPhysics : MonoBehaviour
 
 				foreach (ContactPoint contact in collision.contacts)
 				{
-					eventData.AddSphere("Contact", contact.point, 0.1f, Color.blue, FbFBuiltInRecordingOptions.Collisions);
+					eventData.AddSphere("Contact", contact.point, 0.1f, Color.blue, FrameByFrameBuiltInRecordingOptions.Collisions);
 					eventData.AddEntityRef("Contact Entity", contact.otherCollider.gameObject);
 				}
 			}

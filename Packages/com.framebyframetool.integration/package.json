@@ -1,0 +1,43 @@
+{
+  "name": "com.framebyframetool.integration",
+  "version": "1.0.0",
+  "displayName": "Frame by Frame for Unity",
+  "description": "Unity integration for Frame by Frame, a visual debugging and recording tool for 3D applications. Supports Frame by Frame v1.1.0.",
+  "unity": "2022.3",
+  "author": {
+    "name": "Daniel Armesto Gutierrez",
+    "url": "https://www.framebyframetool.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/XDargu/FrameByFrame-UnityIntegration.git"
+  },
+  "documentationUrl": "https://github.com/XDargu/FrameByFrame-UnityIntegration/blob/main/Packages/com.framebyframetool.integration/Documentation~/README.md",
+  "changelogUrl": "https://github.com/XDargu/FrameByFrame-UnityIntegration/blob/main/Packages/com.framebyframetool.integration/CHANGELOG.md",
+  "licensesUrl": "https://github.com/XDargu/FrameByFrame-UnityIntegration/blob/main/Packages/com.framebyframetool.integration/LICENSE.md",
+  "icon": "Icon.png",
+  "keywords": [
+    "frame-by-frame",
+    "debugging",
+    "recording",
+    "visual-debugging",
+    "websocket",
+    "tools"
+  ],
+  "dependencies": {
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.unity.modules.ai": "1.0.0",
+    "com.unity.modules.animation": "1.0.0",
+    "com.unity.modules.imageconversion": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.screencapture": "1.0.0"
+  },
+  "samples": [
+    {
+      "displayName": "Demo",
+      "description": "Example scenes and scripts for Frame by Frame for Unity.",
+      "path": "Samples~/Demo"
+    }
+  ]
+}
