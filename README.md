@@ -2,8 +2,6 @@
 
 Unity integration for [Frame by Frame](https://www.framebyframetool.com), a visual debugging and recording tool for 3D applications.
 
-![Frame by Frame for Unity example](Branding/ExampleScreen.png)
-
 ![Frame by Frame for Unity example](Packages/com.framebyframetool.integration/Documentation~/images/ExampleScreen.png)
 
 This repository contains the Unity Package Manager package:
